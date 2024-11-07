@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileHandler {
-    public List<String> readFromFile(String filePath) throws IOException {
+    public static List<String> readFromFile(String filePath) throws IOException {
         List<String> data = new ArrayList<>();
         try (
                 BufferedReader reader = new BufferedReader(new FileReader(filePath))
         ) {
             String token;
-            if((token = reader.readLine()) != null) {
+            while ((token = reader.readLine()) != null) {
                 data.add(token);
             }
         } catch (IOException e) {

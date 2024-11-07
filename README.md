@@ -10,8 +10,8 @@
 
 #### 상품 목록 입력
 
-- [ ] ``src/main/resources/products.md`` 파일에서 상품 목록을 불러옵니다.
-- [ ] 각가의 상품을 프로모션 여부에 따라서 프로모션 상품 목록과 일반 상품 목록으로 나눕니다.
+- [ ] ``src/main/resources/products.md`` 파일에서 상품 목록을 불러옵니
+- [ ] 각각의 상품을 프로모션 여부에 따라서 프로모션 상품 목록과 일반 상품 목록으로 나눕니다.
   - 상품 목록 데이터 목록 -> name,price,quantity,promotion
   - 각 목록을 ","로 구분합니다.
   - name - String
