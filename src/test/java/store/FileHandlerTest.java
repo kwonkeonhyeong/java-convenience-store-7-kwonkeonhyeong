@@ -11,6 +11,6 @@ class FileHandlerTest {
         FileHandler fileHandler = new FileHandler();
         assertThatThrownBy(() -> fileHandler.readFromFile("wrongPath"))
                 .isInstanceOf(IOException.class)
-                .hasMessage("[ERROR] 파일을 업로드 할 수 없습니다.");
+                .hasMessage("[Error] 파일을 업로드할 수 없습니다.");
     }
 }
