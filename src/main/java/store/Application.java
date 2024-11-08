@@ -1,21 +1,17 @@
 package store;
 
-import java.util.List;
-import store.repository.StorkRepository;
+import store.controller.StoreController;
+import store.view.InputView;
+import store.view.OutputView;
 
 public class Application {
     public static void main(String[] args) {
         // TODO: 프로그램 구현
-        StorkRepository storkRepository = new StorkRepository();
-        List<Stock> all = storkRepository.findAll();
-        System.out.println(all);
+        StoreController storeController = new StoreController(
+                new InputView(),
+                new OutputView()
+        );
 
-        List<Stock> normalStock = storkRepository.findByPromotionIsNotNull();
-        System.out.println(normalStock);
-
-        List<Stock> promotionStock = storkRepository.findByPromotionIsNull();
-        System.out.println(promotionStock);
-
-        System.out.println(StorkRepository.store);
+        storeController.run();
     }
 }
