@@ -1,10 +1,10 @@
 package store.domain.stock;
 
 import java.util.Objects;
+import store.domain.vo.Quantity;
 import store.domain.promotion.PromotionName;
-import store.domain.stock.vo.Price;
-import store.domain.stock.vo.ProductName;
-import store.domain.stock.vo.Quantity;
+import store.domain.vo.Price;
+import store.domain.vo.ProductName;
 
 public class Stock {
     private final ProductName productName;
@@ -23,12 +23,12 @@ public class Stock {
         String[] split = inputStock.split(",");
         String name = split[0];
         Long price = Long.parseLong(split[1]);
-        Long quantity = Long.parseLong(split[2]);
+        String quantity = split[2];
         String promotionName = split[3];
         return createStock(name, price, quantity, promotionName);
     }
 
-    private static Stock createStock(String name, Long price, Long quantity, String promotionName) {
+    private static Stock createStock(String name, Long price, String quantity, String promotionName) {
 
         return new Stock(
                 ProductName.valueOf(name),
@@ -40,10 +40,10 @@ public class Stock {
 
     public String format() {
         String formattedPrice = String.format("%,d", price.getPrice());
-        if(promotionName == null) {
-            return String.format("- %s %s원 %s개",productName,formattedPrice,quantity);
+        if (promotionName == null) {
+            return String.format("- %s %s원 %s개", productName, formattedPrice, quantity);
         }
-        return String.format("- %s %s원 %s개 %s",productName,formattedPrice,quantity,promotionName);
+        return String.format("- %s %s원 %s개 %s", productName, formattedPrice, quantity, promotionName);
     }
 
     public boolean isApplyPromotion() {
@@ -60,6 +60,10 @@ public class Stock {
 
     public Price getPrice() {
         return price;
+    }
+
+    public Long getQuantity() {
+        return quantity.getQuantity();
     }
 
     @Override

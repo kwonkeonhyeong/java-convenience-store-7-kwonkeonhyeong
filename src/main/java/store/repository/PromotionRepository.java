@@ -8,7 +8,7 @@ import store.domain.promotion.Promotion;
 
 public class PromotionRepository {
 
-    public static final List<Promotion> store = new ArrayList<>();
+    private static final List<Promotion> store = new ArrayList<>();
 
     static {
         try {

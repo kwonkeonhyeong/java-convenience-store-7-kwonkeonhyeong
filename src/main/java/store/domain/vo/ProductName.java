@@ -1,4 +1,4 @@
-package store.domain.stock.vo;
+package store.domain.vo;
 
 import java.util.Objects;
 
@@ -10,8 +10,16 @@ public class ProductName {
         this.name = name;
     }
 
-    public static ProductName valueOf(String name) {
-        return new ProductName(name);
+    public static ProductName valueOf(String input) {
+        String stripped = input.strip();
+        validateEmpty(stripped);
+        return new ProductName(stripped);
+    }
+
+    private static void validateEmpty(String input) {
+        if (input == null || input.isEmpty()) {
+            throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
+        }
     }
 
     @Override
