@@ -1,4 +1,4 @@
-package store.domain.product;
+package store.domain.stock.vo;
 
 import java.util.Objects;
 

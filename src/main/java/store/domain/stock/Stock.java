@@ -1,22 +1,22 @@
-package store.domain;
+package store.domain.stock;
 
 import java.util.Objects;
-import store.domain.product.Price;
-import store.domain.product.ProductName;
-import store.domain.product.Promotion;
-import store.domain.product.Quantity;
+import store.domain.promotion.PromotionName;
+import store.domain.stock.vo.Price;
+import store.domain.stock.vo.ProductName;
+import store.domain.stock.vo.Quantity;
 
 public class Stock {
     private final ProductName productName;
     private final Price price;
     private final Quantity quantity;
-    private final Promotion promotion;
+    private final PromotionName promotionName;
 
-    private Stock(ProductName productName, Price price, Quantity quantity, Promotion promotion) {
+    private Stock(ProductName productName, Price price, Quantity quantity, PromotionName promotionName) {
         this.productName = productName;
         this.price = price;
         this.quantity = quantity;
-        this.promotion = promotion;
+        this.promotionName = promotionName;
     }
 
     public static Stock from(String inputStock) {
@@ -24,30 +24,30 @@ public class Stock {
         String name = split[0];
         Long price = Long.parseLong(split[1]);
         Long quantity = Long.parseLong(split[2]);
-        String promotion = split[3];
-        return createStock(name, price, quantity, promotion);
+        String promotionName = split[3];
+        return createStock(name, price, quantity, promotionName);
     }
 
-    private static Stock createStock(String name, Long price, Long quantity, String promotion) {
+    private static Stock createStock(String name, Long price, Long quantity, String promotionName) {
 
         return new Stock(
                 ProductName.valueOf(name),
                 Price.valueOf(price),
                 Quantity.valueOf(quantity),
-                Promotion.valueOf(promotion)
+                PromotionName.valueOf(promotionName)
         );
     }
 
     public String format() {
         String formattedPrice = String.format("%,d", price.getPrice());
-        if(promotion == null) {
+        if(promotionName == null) {
             return String.format("- %s %s원 %s개",productName,formattedPrice,quantity);
         }
-        return String.format("- %s %s원 %s개 %s",productName,formattedPrice,quantity,promotion);
+        return String.format("- %s %s원 %s개 %s",productName,formattedPrice,quantity,promotionName);
     }
 
     public boolean isApplyPromotion() {
-        return promotion != null;
+        return promotionName != null;
     }
 
     public boolean matchesProductName(ProductName productName) {
@@ -68,7 +68,7 @@ public class Stock {
                 "productName=" + productName +
                 ", price=" + price +
                 ", quantity=" + quantity +
-                ", promotion=" + promotion +
+                ", promotion=" + promotionName +
                 '}';
     }
 

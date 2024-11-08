@@ -1,9 +1,10 @@
 package store.controller;
 
 import java.util.List;
-import store.domain.Stock;
-import store.domain.product.Price;
-import store.domain.product.ProductName;
+import store.domain.stock.Stock;
+import store.domain.stock.vo.Price;
+import store.domain.stock.vo.ProductName;
+import store.repository.PromotionRepository;
 import store.repository.StockRepository;
 import store.view.InputView;
 import store.view.OutputView;
@@ -12,6 +13,7 @@ public class StoreController {
     private InputView inputView;
     private OutputView outputView;
     private StockRepository stockRepository = new StockRepository();
+    private PromotionRepository promotionRepository = new PromotionRepository();
 
     public StoreController(InputView inputView, OutputView outputView) {
         this.inputView = inputView;
@@ -20,6 +22,7 @@ public class StoreController {
 
     public void run() {
         displayCurrentStockState();
+        System.out.println(PromotionRepository.store);
     }
 
     private void displayCurrentStockState() {

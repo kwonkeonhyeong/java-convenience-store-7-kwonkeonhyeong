@@ -6,8 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import store.FileHandler;
-import store.domain.Stock;
-import store.domain.product.ProductName;
+import store.domain.stock.Stock;
+import store.domain.stock.vo.ProductName;
 
 public class StockRepository {
 
@@ -15,10 +15,10 @@ public class StockRepository {
 
     static {
         try {
-            List<String> strings = FileHandler.readFromFile("src/main/resources/products.md");
-            strings.removeFirst();
-            for (String string : strings) {
-                Stock stock = Stock.from(string);
+            List<String> inputs = FileHandler.readFromFile("src/main/resources/products.md");
+            inputs.removeFirst();
+            for (String input : inputs) {
+                Stock stock = Stock.from(input);
                 store.add(stock);
             }
         } catch (IOException e) {
