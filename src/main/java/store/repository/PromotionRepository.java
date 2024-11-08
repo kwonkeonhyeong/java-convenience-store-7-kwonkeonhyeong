@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import store.FileHandler;
-import store.domain.promotion.Promotion;
+import store.domain.Promotion;
 
 public class PromotionRepository {
 
@@ -22,4 +22,11 @@ public class PromotionRepository {
             System.out.println(e.getMessage());
         }
     }
+
+    public Promotion findByPromotionName(String name) {
+        return store.stream()
+                .filter(promotion -> promotion.matchesName(name))
+                .findFirst()
+                .orElse(null);
+    };
 }

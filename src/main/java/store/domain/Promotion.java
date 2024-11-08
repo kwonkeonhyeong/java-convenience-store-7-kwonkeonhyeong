@@ -1,4 +1,4 @@
-package store.domain.promotion;
+package store.domain;
 
 import java.time.LocalDate;
 
@@ -27,6 +27,34 @@ public class Promotion {
         LocalDate startDate = LocalDate.parse(split[3]);
         LocalDate endDate = LocalDate.parse(split[4]);
         return new Promotion(name, buy, get, startDate, endDate);
+    }
+
+    public boolean matchesName(String name) {
+        return this.name.equals(name);
+    }
+
+    public boolean checkDate() {
+        LocalDate nowDate = LocalDate.now();
+        if (nowDate.isBefore(startDate) || nowDate.isAfter(endDate)) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isAdditionalOrder(Order order, Stock stock) {
+        Long orderQuantity;
+        if ((orderQuantity = order.getQuantity()) < stock.getQuantity()) {
+            return orderQuantity%(buy+get) == buy;
+        }
+        return false;
+    }
+
+    public Long calculateNonPromotionalQuantity(Order order, Stock stock) {
+        Long orderQuantity, stockQuantity;
+        if ((orderQuantity = order.getQuantity()) >= (stockQuantity = stock.getQuantity())) {
+            return orderQuantity - ((stockQuantity/(buy+get)) * (buy+get));
+        }
+        return 0L;
     }
 
     @Override

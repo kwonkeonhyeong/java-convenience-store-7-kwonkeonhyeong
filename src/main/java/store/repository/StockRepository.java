@@ -6,8 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import store.FileHandler;
-import store.domain.stock.Stock;
-import store.domain.vo.ProductName;
+import store.domain.Stock;
+import store.domain.ProductName;
 
 public class StockRepository {
 
@@ -34,17 +34,29 @@ public class StockRepository {
                 .toList();
     }
 
-    public Stock findByProductNameAndPromotionIsNotNull(ProductName productName) {
+    public List<Stock> findByPromotionIsNotNull() {
         return store.stream()
-                .filter(stock -> stock.matchesProductName(productName) && stock.isApplyPromotion())
+                .filter(Stock::isApplyPromotion)
+                .toList();
+    }
+
+    public List<Stock> findByPromotionIsNull() {
+        return store.stream()
+                .filter(stock -> !stock.isApplyPromotion())
+                .toList();
+    }
+
+    public Stock findByProductNameAndPromotionIsNotNull(String name) {
+        return store.stream()
+                .filter(stock -> stock.matchesProductName(name) && stock.isApplyPromotion())
                 .findFirst()
                 .orElse(null);
     }
 
-    public Stock findByProductNameAndPromotionIsNull(ProductName productName) {
+    public Stock findByProductNameAndPromotionIsNull(String name) {
         return store.stream()
                 .filter(stock -> {
-                    if (!stock.matchesProductName(productName)) {
+                    if (!stock.matchesProductName(name)) {
                         return false;
                     }
                     return !stock.isApplyPromotion();
@@ -53,14 +65,14 @@ public class StockRepository {
                 .orElse(null);
     }
 
-    public boolean hasStockWith(ProductName productName) {
+    public boolean hasStockWith(String name) {
         return store.stream()
-                .anyMatch(stock -> stock.matchesProductName(productName));
+                .anyMatch(stock -> stock.matchesProductName(name));
     }
 
-    public List<Stock> findByProductName(ProductName productName) {
+    public List<Stock> findByProductName(String name) {
         return store.stream()
-                .filter(stock -> stock.matchesProductName(productName))
+                .filter(stock -> stock.matchesProductName(name))
                 .toList();
     }
 }

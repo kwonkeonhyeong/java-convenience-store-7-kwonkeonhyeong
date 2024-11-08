@@ -1,4 +1,4 @@
-package store.domain.promotion;
+package store.domain;
 
 public class PromotionName {
     private final String promotionName;
@@ -12,6 +12,10 @@ public class PromotionName {
             return null;
         }
         return new PromotionName(input);
+    }
+
+    public String getPromotionName() {
+        return promotionName;
     }
 
     @Override

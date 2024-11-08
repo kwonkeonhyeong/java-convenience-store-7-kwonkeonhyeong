@@ -2,11 +2,13 @@ package store.controller;
 
 import java.util.List;
 import java.util.function.Supplier;
-import store.domain.order.Order;
-import store.domain.order.Orders;
-import store.domain.stock.Stock;
-import store.domain.vo.Price;
-import store.domain.vo.ProductName;
+import store.domain.Answer;
+import store.domain.Order;
+import store.service.OrderService;
+import store.domain.Orders;
+import store.domain.Stock;
+import store.domain.Price;
+import store.domain.ProductName;
 import store.repository.StockRepository;
 import store.view.InputView;
 import store.view.OutputView;
@@ -15,6 +17,7 @@ public class StoreController {
     private final InputView inputView;
     private final OutputView outputView;
     private final StockRepository stockRepository = new StockRepository();
+    private final OrderService orderService = new OrderService();
 
     public StoreController(InputView inputView, OutputView outputView) {
         this.inputView = inputView;
@@ -23,45 +26,59 @@ public class StoreController {
 
     public void run() {
         displayCurrentStockState();
-        Orders orders = doLoop(this::getOrder);
+        Orders orders = doLoop(this::receiveOrder);
+        checkPromotion(orders);
     }
 
-    public Orders getOrder() {
+    public Orders receiveOrder() {
         String input = inputView.enterOrder();
-        Orders orders = Orders.from(input);
-        checkOrderProductExists(orders);
-        hasStockQuantityAvailable(orders);
-        return orders;
+        return orderService.createOrders(input);
     }
 
-    private void checkOrderProductExists(Orders orders) {
+    private void checkPromotion(Orders orders) {
         for (Order order : orders.getOrders()) {
-            if (!stockRepository.hasStockWith(order.getName())) {
-                throw new IllegalArgumentException("[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.");
+            if (orderService.needsAdditionalOrder(order)) {
+                checkAddOrder(order);
             }
-            ;
+            Long quantity = orderService.confirmPurchaseWithoutPromotion(order);
+            if ( quantity != 0L) {
+                checkNonPromotionalQuantity(order,quantity);
+            }
+        }
+    }
+
+    private void checkAddOrder(Order order) {
+        Answer answer = doLoop(() -> receiveAddOrder(order));
+        if (answer.isYes()) {
+            order.addQuantity();
         }
     }
 
-    private void hasStockQuantityAvailable(Orders orders) {
-        for (Order order : orders.getOrders()) {
-            List<Stock> productNames = stockRepository.findByProductName(order.getName());
-            long availableStockQuantitySum = productNames.stream()
-                    .map(Stock::getQuantity)
-                    .mapToLong(Long::longValue)
-                    .sum();
-            if (availableStockQuantitySum < order.getQuantity()) {
-                throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
-            }
+    private Answer receiveAddOrder(Order order) {
+        String input = inputView.enterAdditionalOrder(order.getName());
+        return Answer.from(input);
+    }
+
+    private void checkNonPromotionalQuantity(Order order,Long quantity) {
+        Answer answer = doLoop(() -> determineNonPromotionPurchase(order,quantity));
+        System.out.println(order.getQuantity());
+        if (!answer.isYes()) {
+            order.removeQuantity(quantity);
         }
+        System.out.println(order.getQuantity());
+    }
+
+    private Answer determineNonPromotionPurchase(Order order, Long quantity) {
+        String input = inputView.enterNonPromotionPurchase(order.getName(),quantity);
+        return Answer.from(input);
     }
 
     private void displayCurrentStockState() {
         outputView.printStocksStateHeader();
         List<ProductName> uniqueProductNames = stockRepository.findDistinctProductNames();
         for (ProductName name : uniqueProductNames) {
-            Stock promotionStock = stockRepository.findByProductNameAndPromotionIsNotNull(name);
-            Stock normalStock = stockRepository.findByProductNameAndPromotionIsNull(name);
+            Stock promotionStock = stockRepository.findByProductNameAndPromotionIsNotNull(name.getName());
+            Stock normalStock = stockRepository.findByProductNameAndPromotionIsNull(name.getName());
             displayStockInfo(promotionStock, normalStock);
         }
     }

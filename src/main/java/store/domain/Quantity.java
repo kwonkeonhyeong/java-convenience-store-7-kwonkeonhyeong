@@ -1,4 +1,4 @@
-package store.domain.vo;
+package store.domain;
 
 import java.util.Objects;
 
@@ -40,6 +40,14 @@ public class Quantity {
         if (quantity < 0) {
             throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.");
         }
+    }
+
+    public Quantity add() {
+        return new Quantity(quantity+1);
+    }
+
+    public Quantity remove(Long quantity) {
+        return new Quantity(this.quantity-quantity);
     }
 
     public Long getQuantity() {

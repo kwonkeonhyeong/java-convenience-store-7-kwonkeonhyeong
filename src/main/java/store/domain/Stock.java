@@ -1,10 +1,4 @@
-package store.domain.stock;
-
-import java.util.Objects;
-import store.domain.vo.Quantity;
-import store.domain.promotion.PromotionName;
-import store.domain.vo.Price;
-import store.domain.vo.ProductName;
+package store.domain;
 
 public class Stock {
     private final ProductName productName;
@@ -50,8 +44,8 @@ public class Stock {
         return promotionName != null;
     }
 
-    public boolean matchesProductName(ProductName productName) {
-        return this.productName.equals(productName);
+    public boolean matchesProductName(String name) {
+        return productName.matchesName(name);
     }
 
     public ProductName getProductName() {
@@ -66,6 +60,10 @@ public class Stock {
         return quantity.getQuantity();
     }
 
+    public String getPromotionName() {
+        return promotionName.getPromotionName();
+    }
+
     @Override
     public String toString() {
         return "Stock{" +
@@ -74,21 +72,5 @@ public class Stock {
                 ", quantity=" + quantity +
                 ", promotion=" + promotionName +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Stock stock)) {
-            return false;
-        }
-        return Objects.equals(productName, stock.productName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(productName);
     }
 }

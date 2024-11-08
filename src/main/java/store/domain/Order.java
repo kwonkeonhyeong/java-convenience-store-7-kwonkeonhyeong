@@ -1,12 +1,11 @@
-package store.domain.order;
+package store.domain;
 
-import store.domain.vo.ProductName;
-import store.domain.vo.Quantity;
+import java.util.Objects;
 
 public class Order {
 
     private final ProductName name;
-    private final Quantity quantity;
+    private Quantity quantity;
 
     private Order(ProductName name, Quantity quantity) {
         this.name = name;
@@ -17,9 +16,9 @@ public class Order {
         validateOrderFormat(input);
         String substring = input.substring(1, input.length() - 1);
         String[] split = substring.split("-", -1);
-        String name = split[0];
-        String quantity = split[1];
-        return new Order(ProductName.valueOf(name), Quantity.valueOf(quantity));
+        ProductName productName = ProductName.valueOf(split[0]);
+        Quantity quantity = Quantity.valueOf(split[1]);
+        return new Order(productName, quantity);
     }
 
     private static void validateOrderFormat(String input) {
@@ -32,12 +31,36 @@ public class Order {
         }
     }
 
-    public ProductName getName() {
-        return name;
+    public void addQuantity() {
+        quantity = quantity.add();
+    }
+
+    public void removeQuantity(Long quantity) {
+        this.quantity = this.quantity.remove(quantity);
+    }
+
+    public String getName() {
+        return name.getName();
     }
 
     public Long getQuantity() {
         return quantity.getQuantity();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Order order)) {
+            return false;
+        }
+        return Objects.equals(getName(), order.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getName());
     }
 
     @Override
