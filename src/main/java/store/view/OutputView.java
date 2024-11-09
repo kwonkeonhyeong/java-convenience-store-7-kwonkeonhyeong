@@ -10,4 +10,13 @@ public class OutputView {
         System.out.println("현재 보유하고 있는 상품입니다.");
         System.out.println();
     }
+
+    public void printBill(String bill) {
+        System.out.println();
+        System.out.println(bill);
+    }
+
+    public void printMessage(String message) {
+        System.out.println(message);
+    }
 }

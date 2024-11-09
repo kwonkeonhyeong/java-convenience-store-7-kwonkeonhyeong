@@ -44,6 +44,8 @@ public class StoreController {
             checkPromotion(orders);
             boolean hasMembership = doLoop(this::determineMembershipDiscount);
             Bill bill = generateBill(orders, hasMembership);
+            outputView.printBill(bill.formatBill());
+            orderService.updateStock(bill.getBillingItems());
             restart = doLoop(this::determineAnotherOrder);
         }
 
@@ -95,7 +97,6 @@ public class StoreController {
         for (Order order : orders.getOrders()) {
             billingItems.add(billingService.generateBillingItem(order));
         }
-        orderService.updateStock(billingItems);
         return Bill.of(billingItems, hasMembership);
     }
 
@@ -137,7 +138,8 @@ public class StoreController {
         if (normalStock == null && promotionStock != null) {
             Price price = promotionStock.getPrice();
             String formattedPrice = String.format("%,d", price.getPrice());
-            System.out.printf("- %s %s원 재고 없음%n", promotionStock.getProductName(), formattedPrice);
+            String formatted = String.format("- %s %s원 재고 없음", promotionStock.getProductName(), formattedPrice);
+            outputView.printCurrentStockState(formatted);
         }
     }
 
@@ -146,7 +148,7 @@ public class StoreController {
             try {
                 return function.get();
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                outputView.printMessage(e.getMessage());
             }
         }
     }

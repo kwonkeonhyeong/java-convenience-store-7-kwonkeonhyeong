@@ -1,5 +1,7 @@
 package store.domain;
 
+import store.domain.vo.Price;
+
 public class BillingItem {
 
     private final Order order;
@@ -23,26 +25,46 @@ public class BillingItem {
         return 0L;
     }
 
-    public Long checkNormalPaymentQuantity() {
-        if (promotion != null) {
-            Long quantity = promotion.calculatePromotionGiftQuantity(order, stock);
-            return order.getQuantity() - promotion.calculatePromotionQuantity(quantity);
-        }
-        return order.getQuantity();
-    }
-
     public Long calculateDeficitQuantity() {
         Long promotionStock = stock.getQuantity();
         Long promotionQuantity = promotion.calculatePromotionQuantity(checkPromotionGiftQuantity());
         return promotion.calculateNonPromotionalQuantity(order,stock) - (promotionStock - promotionQuantity);
     }
 
+    public Long calculatePurchaseAmount() {
+        return stock.calculateAmount(order.getQuantity());
+    }
+
+    public Long calculatePromotionQuantityAmount() {
+        if(hasPromotion()) {
+            Long promotionQuantity = promotion.calculatePromotionQuantity(checkPromotionGiftQuantity());
+            return stock.calculateAmount(promotionQuantity);
+        }
+        return 0L;
+    }
+
+    public Long calculatePromotionDiscountAmount() {
+        return stock.calculateAmount(checkPromotionGiftQuantity());
+    }
+
     public boolean hasNoStock() {
-        return stock.getQuantity() <= order.getQuantity();
+        return stock.getQuantity() < order.getQuantity();
     }
 
     public boolean hasPromotion() {
         return promotion != null;
+    }
+
+    public String formatOrder() {
+        String format = "%-10s %-5s %-10s\n";
+        Price price = stock.getPrice();
+        String formattedPrice = String.format("%,d", price.getPrice());
+        return String.format(format, order.getName(), order.getQuantity(), formattedPrice);
+    }
+
+    public String formatPromotion() {
+        String format = "%-10s %-5s\n";
+        return String.format(format, order.getName(), checkPromotionGiftQuantity());
     }
 
     public String getOrderProductName() {

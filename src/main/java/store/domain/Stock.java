@@ -46,14 +46,14 @@ public class Stock {
 
     private String formatPromotionStock(String formattedPrice) {
         if (quantity.getQuantity() == 0L) {
-            return String.format("- %s %s원 재고없음 %s", productName, formattedPrice, promotionName);
+            return String.format("- %s %s원 재고 없음 %s", productName, formattedPrice, promotionName);
         }
         return String.format("- %s %s원 %s개 %s", productName, formattedPrice, quantity, promotionName);
     }
 
     private String formatNormalStock(String formattedPrice) {
         if (quantity.getQuantity() == 0L) {
-            return String.format("- %s %s원 재고없음", productName, formattedPrice);
+            return String.format("- %s %s원 재고 없음", productName, formattedPrice);
         }
         return String.format("- %s %s원 %s개", productName, formattedPrice, quantity);
     }
@@ -68,6 +68,10 @@ public class Stock {
 
     public void decreaseQuantity(Long quantity) {
         this.quantity = this.quantity.decrease(quantity);
+    }
+
+    public Long calculateAmount(Long quantity) {
+        return quantity* price.getPrice();
     }
 
     public ProductName getProductName() {

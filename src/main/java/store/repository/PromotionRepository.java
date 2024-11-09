@@ -3,7 +3,7 @@ package store.repository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import store.FileHandler;
+import store.util.FileHandler;
 import store.domain.Promotion;
 
 public class PromotionRepository {

@@ -1,6 +1,9 @@
 package store.domain;
 
+import static camp.nextstep.edu.missionutils.DateTimes.now;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Promotion {
 
@@ -34,8 +37,8 @@ public class Promotion {
     }
 
     public boolean isNonPromotionDate() {
-        LocalDate nowDate = LocalDate.now();
-        return nowDate.isBefore(startDate) && nowDate.isAfter(endDate);
+        LocalDateTime now = now();
+        return now.isBefore(startDate.atStartOfDay()) || now.isAfter(endDate.atStartOfDay());
     }
 
     public boolean isAdditionalOrder(Order order, Stock stock) {
@@ -55,6 +58,9 @@ public class Promotion {
     }
 
     public Long calculatePromotionGiftQuantity(Order order, Stock stock) {
+        if(isNonPromotionDate()){
+            return 0L;
+        }
         Long orderQuantity, stockQuantity;
         if ((orderQuantity = order.getQuantity()) >= (stockQuantity = stock.getQuantity())) {
             return stockQuantity/(buy+get);
