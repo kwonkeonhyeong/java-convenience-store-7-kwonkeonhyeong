@@ -112,7 +112,7 @@
 - [x] 결제된 수량만큼 해당 상품의 재고에서 차감합니다.
 
 
-- [ ] 상품 구매를 완료 후 ``src/main/resources/products.md`` 파일을 최신 재고 상태로 업데이트 합니다.
+- [x] 상품 구매를 완료 후 ``src/main/resources/products.md`` 파일을 최신 재고 상태로 업데이트 합니다.
 
 
 

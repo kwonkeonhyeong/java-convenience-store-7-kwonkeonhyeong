@@ -14,9 +14,9 @@ public class OrderService {
     private final StockRepository stockRepository;
     private final PromotionRepository promotionRepository;
 
-    public OrderService() {
-        this.stockRepository = new StockRepository();
-        this.promotionRepository = new PromotionRepository();
+    public OrderService(StockRepository stockRepository, PromotionRepository promotionRepository) {
+        this.stockRepository = stockRepository;
+        this.promotionRepository = promotionRepository;
     }
 
     public Orders createOrders(String input) {
@@ -48,13 +48,13 @@ public class OrderService {
     public boolean needsAdditionalOrder(Order order) {
         Stock promotionStock = stockRepository.findByProductNameAndPromotionIsNotNull(order.getName());
         if (promotionStock == null) {
-           return false;
+            return false;
         }
         Promotion promotion = promotionRepository.findByPromotionName(promotionStock.getPromotionName());
         if (promotion.isNonPromotionDate()) {
             return false;
         }
-        return promotion.isAdditionalOrder(order,promotionStock);
+        return promotion.isAdditionalOrder(order, promotionStock);
     }
 
     public Long confirmPurchaseWithoutPromotion(Order order) {
@@ -71,7 +71,7 @@ public class OrderService {
 
     public void updateStock(List<BillingItem> billingItems) {
         for (BillingItem billingItem : billingItems) {
-            if(billingItem.hasPromotion()) {
+            if (billingItem.hasPromotion()) {
                 updatePromotionStock(billingItem);
                 continue;
             }
@@ -82,27 +82,27 @@ public class OrderService {
 
     private void updatePromotionStock(BillingItem billingItem) {
         if (billingItem.hasNoStock()) {
-            stockRepository.deleteWhereNameAndPromotionIsNotNull(billingItem.getOrderProductName());
-            stockRepository.decreaseQuantityWhereNameAndPromotionIsNull(
-                    billingItem.getOrderProductName(),
-                    billingItem.calculateDeficitQuantity()
-            );
+            Long quantity = billingItem.calculateDeficitQuantity();
+            decreasePromotionStockQuantity(billingItem.getOrderProductName(), billingItem.getStockQuantity());
+            decreaseNormalStockQuantity(billingItem.getOrderProductName(), quantity);
             return;
         }
-        stockRepository.decreaseQuantityWhereNameAndPromotionIsNotNull(
-                billingItem.getOrderProductName(),
-                billingItem.getOrderQuantity()
-        );
+        decreasePromotionStockQuantity(billingItem.getOrderProductName(), billingItem.getOrderQuantity());
     }
 
     private void updateNormalStock(BillingItem billingItem) {
         if (billingItem.hasNoStock()) {
-            stockRepository.deleteWhereNameAndPromotionIsNull(billingItem.getOrderProductName());
+            decreaseNormalStockQuantity(billingItem.getOrderProductName(), billingItem.getStockQuantity());
             return;
         }
-        stockRepository.decreaseQuantityWhereNameAndPromotionIsNull(
-                billingItem.getOrderProductName(),
-                billingItem.getOrderQuantity()
-        );
+        decreaseNormalStockQuantity(billingItem.getOrderProductName(), billingItem.getOrderQuantity());
+    }
+
+    private void decreasePromotionStockQuantity(String name, Long quantity) {
+        stockRepository.decreaseQuantityWhereNameAndPromotionIsNotNull(name, quantity);
+    }
+
+    private void decreaseNormalStockQuantity(String name, Long quantity) {
+        stockRepository.decreaseQuantityWhereNameAndPromotionIsNull(name, quantity);
     }
 }

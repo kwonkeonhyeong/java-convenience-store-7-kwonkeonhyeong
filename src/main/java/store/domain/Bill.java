@@ -15,4 +15,6 @@ public class Bill {
     public static Bill of(List<BillingItem> billingItems, boolean hasMembership) {
         return new Bill(billingItems, hasMembership);
     }
+
+//    public
 }

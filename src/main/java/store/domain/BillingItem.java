@@ -1,8 +1,5 @@
 package store.domain;
 
-import store.domain.vo.ProductName;
-import store.domain.vo.Quantity;
-
 public class BillingItem {
 
     private final Order order;
@@ -34,14 +31,6 @@ public class BillingItem {
         return order.getQuantity();
     }
 
-    public String getOrderProductName() {
-        return order.getName();
-    }
-
-    public Long getOrderQuantity() {
-        return order.getQuantity();
-    }
-
     public Long calculateDeficitQuantity() {
         Long promotionStock = stock.getQuantity();
         Long promotionQuantity = promotion.calculatePromotionQuantity(checkPromotionGiftQuantity());
@@ -54,6 +43,18 @@ public class BillingItem {
 
     public boolean hasPromotion() {
         return promotion != null;
+    }
+
+    public String getOrderProductName() {
+        return order.getName();
+    }
+
+    public Long getOrderQuantity() {
+        return order.getQuantity();
+    }
+
+    public Long getStockQuantity() {
+        return stock.getQuantity();
     }
 
 }

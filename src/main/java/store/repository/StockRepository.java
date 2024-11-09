@@ -11,9 +11,28 @@ import store.domain.vo.ProductName;
 
 public class StockRepository {
 
-    public static final List<Stock> store = new ArrayList<>();
+//    private static final List<Stock> store = new ArrayList<>();
+    private final List<Stock> store = new ArrayList<>();
 
+    public StockRepository() {
+        init();
+    }
+
+    /*
     static {
+        try {
+            List<String> inputs = FileHandler.readFromFile("src/main/resources/products.md");
+            inputs.removeFirst();
+            for (String input : inputs) {
+                Stock stock = Stock.from(input);
+                store.add(stock);
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }*/
+
+    private void init() {
         try {
             List<String> inputs = FileHandler.readFromFile("src/main/resources/products.md");
             inputs.removeFirst();
@@ -76,7 +95,7 @@ public class StockRepository {
         target.decreaseQuantity(quantity);
     }
 
-    public void deleteWhereNameAndPromotionIsNull(String name) {
+/*    public void deleteWhereNameAndPromotionIsNull(String name) {
         Stock target = findByProductNameAndPromotionIsNull(name);
         store.remove(target);
     }
@@ -84,5 +103,5 @@ public class StockRepository {
     public void deleteWhereNameAndPromotionIsNotNull(String name) {
         Stock target = findByProductNameAndPromotionIsNotNull(name);
         store.remove(target);
-    }
+    }*/
 }

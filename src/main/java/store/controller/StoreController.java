@@ -7,6 +7,7 @@ import store.domain.Bill;
 import store.domain.BillingItem;
 import store.domain.vo.Answer;
 import store.domain.Order;
+import store.repository.PromotionRepository;
 import store.service.BillingService;
 import store.service.OrderService;
 import store.domain.Orders;
@@ -20,21 +21,32 @@ import store.view.OutputView;
 public class StoreController {
     private final InputView inputView;
     private final OutputView outputView;
-    private final StockRepository stockRepository = new StockRepository();
-    private final OrderService orderService = new OrderService();
-    private final BillingService billingService = new BillingService();
+    private final StockRepository stockRepository;
+    private final PromotionRepository promotionRepository;
+    private final OrderService orderService;
+    private final BillingService billingService;
 
-    public StoreController(InputView inputView, OutputView outputView) {
+    public StoreController(InputView inputView, OutputView outputView, StockRepository stockRepository,
+                           PromotionRepository promotionRepository, OrderService orderService, BillingService billingService) {
         this.inputView = inputView;
         this.outputView = outputView;
+        this.stockRepository = stockRepository;
+        this.promotionRepository = promotionRepository;
+        this.orderService = orderService;
+        this.billingService = billingService;
     }
 
     public void run() {
-        displayCurrentStockState();
-        Orders orders = doLoop(this::receiveOrder);
-        checkPromotion(orders);
-        boolean hasMembership = doLoop(this::determineMembershipDiscount);
-        Bill bill = generateBill(orders, hasMembership);
+        boolean restart = true;
+        while (restart) {
+            displayCurrentStockState();
+            Orders orders = doLoop(this::receiveOrder);
+            checkPromotion(orders);
+            boolean hasMembership = doLoop(this::determineMembershipDiscount);
+            Bill bill = generateBill(orders, hasMembership);
+            restart = doLoop(this::determineAnotherOrder);
+        }
+
     }
 
     public Orders receiveOrder() {
@@ -48,8 +60,8 @@ public class StoreController {
                 checkAddOrder(order);
             }
             Long quantity = orderService.confirmPurchaseWithoutPromotion(order);
-            if ( quantity != 0L) {
-                checkNonPromotionalQuantity(order,quantity);
+            if (quantity != 0L) {
+                checkNonPromotionalQuantity(order, quantity);
             }
         }
     }
@@ -66,15 +78,15 @@ public class StoreController {
         return Answer.from(input);
     }
 
-    private void checkNonPromotionalQuantity(Order order,Long quantity) {
-        Answer answer = doLoop(() -> determineNonPromotionPurchase(order,quantity));
+    private void checkNonPromotionalQuantity(Order order, Long quantity) {
+        Answer answer = doLoop(() -> determineNonPromotionPurchase(order, quantity));
         if (!answer.isYes()) {
             order.removeQuantity(quantity);
         }
     }
 
     private Answer determineNonPromotionPurchase(Order order, Long quantity) {
-        String input = inputView.enterNonPromotionPurchase(order.getName(),quantity);
+        String input = inputView.enterNonPromotionPurchase(order.getName(), quantity);
         return Answer.from(input);
     }
 
@@ -84,11 +96,17 @@ public class StoreController {
             billingItems.add(billingService.generateBillingItem(order));
         }
         orderService.updateStock(billingItems);
-        return Bill.of(billingItems,hasMembership);
+        return Bill.of(billingItems, hasMembership);
     }
 
     private boolean determineMembershipDiscount() {
         String input = inputView.enterApplicableMembershipDiscount();
+        Answer answer = Answer.from(input);
+        return answer.isYes();
+    }
+
+    private boolean determineAnotherOrder() {
+        String input = inputView.enterAnotherOrder();
         Answer answer = Answer.from(input);
         return answer.isYes();
     }

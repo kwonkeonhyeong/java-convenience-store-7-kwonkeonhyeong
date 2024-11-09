@@ -8,12 +8,12 @@ import store.repository.PromotionRepository;
 import store.repository.StockRepository;
 
 public class BillingService {
-    private final PromotionRepository promotionRepository;
     private final StockRepository stockRepository;
+    private final PromotionRepository promotionRepository;
 
-    public BillingService() {
-        this.promotionRepository = new PromotionRepository();
-        this.stockRepository = new StockRepository();
+    public BillingService(StockRepository stockRepository, PromotionRepository promotionRepository) {
+        this.stockRepository = stockRepository;
+        this.promotionRepository = promotionRepository;
     }
 
     public BillingItem generateBillingItem(Order order) {

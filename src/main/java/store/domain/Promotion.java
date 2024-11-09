@@ -1,7 +1,6 @@
 package store.domain;
 
 import java.time.LocalDate;
-import store.domain.vo.Quantity;
 
 public class Promotion {
 
