@@ -1,4 +1,4 @@
-package store.domain;
+package store.domain.vo;
 
 import java.util.Objects;
 
@@ -16,6 +16,10 @@ public class Quantity {
         validateEmpty(stripped);
         validateNumeric(stripped);
         return new Quantity(Long.parseLong(stripped));
+    }
+
+    public static Quantity valueOf(Long quantity) {
+        return new Quantity(quantity);
     }
 
     private static void validateEmpty(String input) {

@@ -33,12 +33,9 @@ public class Promotion {
         return this.name.equals(name);
     }
 
-    public boolean checkDate() {
+    public boolean isNonPromotionDate() {
         LocalDate nowDate = LocalDate.now();
-        if (nowDate.isBefore(startDate) || nowDate.isAfter(endDate)) {
-            return false;
-        }
-        return true;
+        return nowDate.isBefore(startDate) && nowDate.isAfter(endDate);
     }
 
     public boolean isAdditionalOrder(Order order, Stock stock) {
@@ -55,6 +52,14 @@ public class Promotion {
             return orderQuantity - ((stockQuantity/(buy+get)) * (buy+get));
         }
         return 0L;
+    }
+
+    public Long calculatePromotionGiftQuantity(Order order, Stock stock) {
+        Long orderQuantity, stockQuantity;
+        if ((orderQuantity = order.getQuantity()) >= (stockQuantity = stock.getQuantity())) {
+            return stockQuantity/(buy+get);
+        }
+        return orderQuantity/(buy+get);
     }
 
     @Override

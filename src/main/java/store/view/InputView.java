@@ -25,4 +25,10 @@ public class InputView {
                 );
         return readLine().strip();
     }
+
+    public String enterApplicableMembershipDiscount() {
+        System.out.println();
+        System.out.println("멤버십 할인을 받으시겠습니까? (Y/N)");
+        return readLine().strip();
+    }
 }

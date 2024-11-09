@@ -1,5 +1,10 @@
 package store.domain;
 
+import store.domain.vo.Price;
+import store.domain.vo.ProductName;
+import store.domain.vo.PromotionName;
+import store.domain.vo.Quantity;
+
 public class Stock {
     private final ProductName productName;
     private final Price price;
@@ -23,7 +28,6 @@ public class Stock {
     }
 
     private static Stock createStock(String name, Long price, String quantity, String promotionName) {
-
         return new Stock(
                 ProductName.valueOf(name),
                 Price.valueOf(price),

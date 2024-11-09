@@ -50,7 +50,7 @@ public class OrderService {
            return false;
         }
         Promotion promotion = promotionRepository.findByPromotionName(promotionStock.getPromotionName());
-        if (!promotion.checkDate()) {
+        if (promotion.isNonPromotionDate()) {
             return false;
         }
         return promotion.isAdditionalOrder(order,promotionStock);
@@ -62,7 +62,7 @@ public class OrderService {
             return 0L;
         }
         Promotion promotion = promotionRepository.findByPromotionName(promotionStock.getPromotionName());
-        if (!promotion.checkDate()) {
+        if (promotion.isNonPromotionDate()) {
             return 0L;
         }
         return promotion.calculateNonPromotionalQuantity(order, promotionStock);

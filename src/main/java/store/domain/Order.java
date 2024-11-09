@@ -1,6 +1,8 @@
 package store.domain;
 
 import java.util.Objects;
+import store.domain.vo.ProductName;
+import store.domain.vo.Quantity;
 
 public class Order {
 

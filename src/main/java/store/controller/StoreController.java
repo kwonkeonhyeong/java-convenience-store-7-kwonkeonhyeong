@@ -1,14 +1,17 @@
 package store.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import store.domain.Answer;
+import store.domain.BillingItem;
+import store.domain.vo.Answer;
 import store.domain.Order;
+import store.service.BillingService;
 import store.service.OrderService;
 import store.domain.Orders;
 import store.domain.Stock;
-import store.domain.Price;
-import store.domain.ProductName;
+import store.domain.vo.Price;
+import store.domain.vo.ProductName;
 import store.repository.StockRepository;
 import store.view.InputView;
 import store.view.OutputView;
@@ -18,6 +21,7 @@ public class StoreController {
     private final OutputView outputView;
     private final StockRepository stockRepository = new StockRepository();
     private final OrderService orderService = new OrderService();
+    private final BillingService billingService = new BillingService();
 
     public StoreController(InputView inputView, OutputView outputView) {
         this.inputView = inputView;
@@ -28,6 +32,8 @@ public class StoreController {
         displayCurrentStockState();
         Orders orders = doLoop(this::receiveOrder);
         checkPromotion(orders);
+        boolean hasMembership = doLoop(this::determineMembershipDiscount);
+        generateBill(orders);
     }
 
     public Orders receiveOrder() {
@@ -48,13 +54,13 @@ public class StoreController {
     }
 
     private void checkAddOrder(Order order) {
-        Answer answer = doLoop(() -> receiveAddOrder(order));
+        Answer answer = doLoop(() -> receiveAdditionalOrder(order));
         if (answer.isYes()) {
             order.addQuantity();
         }
     }
 
-    private Answer receiveAddOrder(Order order) {
+    private Answer receiveAdditionalOrder(Order order) {
         String input = inputView.enterAdditionalOrder(order.getName());
         return Answer.from(input);
     }
@@ -71,6 +77,19 @@ public class StoreController {
     private Answer determineNonPromotionPurchase(Order order, Long quantity) {
         String input = inputView.enterNonPromotionPurchase(order.getName(),quantity);
         return Answer.from(input);
+    }
+
+    private void generateBill(Orders orders) {
+        List<BillingItem> billingItems = new ArrayList<>();
+        for (Order order : orders.getOrders()) {
+            billingItems.add(billingService.generateBillingItem(order));
+        }
+    }
+
+    private boolean determineMembershipDiscount() {
+        String input = inputView.enterApplicableMembershipDiscount();
+        Answer answer = Answer.from(input);
+        return answer.isYes();
     }
 
     private void displayCurrentStockState() {

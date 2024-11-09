@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import store.FileHandler;
 import store.domain.Stock;
-import store.domain.ProductName;
+import store.domain.vo.ProductName;
 
 public class StockRepository {
 
@@ -26,6 +26,7 @@ public class StockRepository {
         }
     }
 
+
     public List<ProductName> findDistinctProductNames() {
         return store.stream()
                 .map(Stock::getProductName)
@@ -34,16 +35,9 @@ public class StockRepository {
                 .toList();
     }
 
-    public List<Stock> findByPromotionIsNotNull() {
+    public boolean existsPromotionByProductName(String name) {
         return store.stream()
-                .filter(Stock::isApplyPromotion)
-                .toList();
-    }
-
-    public List<Stock> findByPromotionIsNull() {
-        return store.stream()
-                .filter(stock -> !stock.isApplyPromotion())
-                .toList();
+                .anyMatch(stock -> stock.matchesProductName(name) && stock.isApplyPromotion());
     }
 
     public Stock findByProductNameAndPromotionIsNotNull(String name) {
