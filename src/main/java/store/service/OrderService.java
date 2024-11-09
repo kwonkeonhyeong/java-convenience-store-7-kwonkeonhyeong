@@ -1,6 +1,7 @@
 package store.service;
 
 import java.util.List;
+import store.domain.BillingItem;
 import store.domain.Order;
 import store.domain.Orders;
 import store.domain.Promotion;
@@ -66,5 +67,42 @@ public class OrderService {
             return 0L;
         }
         return promotion.calculateNonPromotionalQuantity(order, promotionStock);
+    }
+
+    public void updateStock(List<BillingItem> billingItems) {
+        for (BillingItem billingItem : billingItems) {
+            if(billingItem.hasPromotion()) {
+                updatePromotionStock(billingItem);
+                continue;
+            }
+            updateNormalStock(billingItem);
+        }
+
+    }
+
+    private void updatePromotionStock(BillingItem billingItem) {
+        if (billingItem.hasNoStock()) {
+            stockRepository.deleteWhereNameAndPromotionIsNotNull(billingItem.getOrderProductName());
+            stockRepository.decreaseQuantityWhereNameAndPromotionIsNull(
+                    billingItem.getOrderProductName(),
+                    billingItem.calculateDeficitQuantity()
+            );
+            return;
+        }
+        stockRepository.decreaseQuantityWhereNameAndPromotionIsNotNull(
+                billingItem.getOrderProductName(),
+                billingItem.getOrderQuantity()
+        );
+    }
+
+    private void updateNormalStock(BillingItem billingItem) {
+        if (billingItem.hasNoStock()) {
+            stockRepository.deleteWhereNameAndPromotionIsNull(billingItem.getOrderProductName());
+            return;
+        }
+        stockRepository.decreaseQuantityWhereNameAndPromotionIsNull(
+                billingItem.getOrderProductName(),
+                billingItem.getOrderQuantity()
+        );
     }
 }

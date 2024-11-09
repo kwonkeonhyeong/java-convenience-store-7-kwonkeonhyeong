@@ -8,7 +8,7 @@ import store.domain.vo.Quantity;
 public class Stock {
     private final ProductName productName;
     private final Price price;
-    private final Quantity quantity;
+    private Quantity quantity;
     private final PromotionName promotionName;
 
     private Stock(ProductName productName, Price price, Quantity quantity, PromotionName promotionName) {
@@ -50,6 +50,10 @@ public class Stock {
 
     public boolean matchesProductName(String name) {
         return productName.matchesName(name);
+    }
+
+    public void decreaseQuantity(Long quantity) {
+        this.quantity = this.quantity.decrease(quantity);
     }
 
     public ProductName getProductName() {

@@ -1,43 +1,59 @@
 package store.domain;
 
-import store.domain.vo.Price;
 import store.domain.vo.ProductName;
 import store.domain.vo.Quantity;
 
 public class BillingItem {
-    private final ProductName productName;
-    private final Price price;
-    private final Quantity orderQuantity;
-    private final Quantity promotionGiftQuantity;
 
-    private BillingItem(ProductName productName, Price price, Quantity orderQuantity, Quantity promotionGiftQuantity) {
-        this.productName = productName;
-        this.price = price;
-        this.orderQuantity = orderQuantity;
-        this.promotionGiftQuantity = promotionGiftQuantity;
+    private final Order order;
+    private final Stock stock;
+    private final Promotion promotion;
+
+    private BillingItem(Order order, Stock stock, Promotion promotion) {
+        this.order = order;
+        this.stock = stock;
+        this.promotion = promotion;
     }
 
     public static BillingItem of(Order order, Stock stock, Promotion promotion) {
-        Quantity orderQuantity = Quantity.valueOf(order.getQuantity());
-        Quantity promotionGiftQuantity = checkPromotionGiftQuantity(order,stock, promotion);
-        return new BillingItem(stock.getProductName(), stock.getPrice(), orderQuantity, promotionGiftQuantity);
+        return new BillingItem(order, stock, promotion);
     }
 
-    private static Quantity checkPromotionGiftQuantity(Order order, Stock stock, Promotion promotion) {
+    public Long checkPromotionGiftQuantity() {
+        if (promotion != null) {
+            return promotion.calculatePromotionGiftQuantity(order, stock);
+        }
+        return 0L;
+    }
+
+    public Long checkNormalPaymentQuantity() {
         if (promotion != null) {
             Long quantity = promotion.calculatePromotionGiftQuantity(order, stock);
-            return Quantity.valueOf(quantity);
+            return order.getQuantity() - promotion.calculatePromotionQuantity(quantity);
         }
-        return Quantity.valueOf(0L);
+        return order.getQuantity();
     }
 
-    @Override
-    public String toString() {
-        return "BillingItem{" +
-                "productName=" + productName +
-                ", price=" + price +
-                ", orderQuantity=" + orderQuantity +
-                ", promotionGiftQuantity=" + promotionGiftQuantity +
-                '}';
+    public String getOrderProductName() {
+        return order.getName();
     }
+
+    public Long getOrderQuantity() {
+        return order.getQuantity();
+    }
+
+    public Long calculateDeficitQuantity() {
+        Long promotionStock = stock.getQuantity();
+        Long promotionQuantity = promotion.calculatePromotionQuantity(checkPromotionGiftQuantity());
+        return promotion.calculateNonPromotionalQuantity(order,stock) - (promotionStock - promotionQuantity);
+    }
+
+    public boolean hasNoStock() {
+        return stock.getQuantity() <= order.getQuantity();
+    }
+
+    public boolean hasPromotion() {
+        return promotion != null;
+    }
+
 }

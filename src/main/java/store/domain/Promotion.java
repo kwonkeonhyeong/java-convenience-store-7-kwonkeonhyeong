@@ -1,6 +1,7 @@
 package store.domain;
 
 import java.time.LocalDate;
+import store.domain.vo.Quantity;
 
 public class Promotion {
 
@@ -60,6 +61,10 @@ public class Promotion {
             return stockQuantity/(buy+get);
         }
         return orderQuantity/(buy+get);
+    }
+
+    public Long calculatePromotionQuantity(Long giftQuantity) {
+        return giftQuantity * (buy+get);
     }
 
     @Override

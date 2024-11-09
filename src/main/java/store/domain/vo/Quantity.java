@@ -50,7 +50,7 @@ public class Quantity {
         return new Quantity(quantity+1);
     }
 
-    public Quantity remove(Long quantity) {
+    public Quantity decrease(Long quantity) {
         return new Quantity(this.quantity-quantity);
     }
 

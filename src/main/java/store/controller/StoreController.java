@@ -3,6 +3,7 @@ package store.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import store.domain.Bill;
 import store.domain.BillingItem;
 import store.domain.vo.Answer;
 import store.domain.Order;
@@ -33,7 +34,7 @@ public class StoreController {
         Orders orders = doLoop(this::receiveOrder);
         checkPromotion(orders);
         boolean hasMembership = doLoop(this::determineMembershipDiscount);
-        generateBill(orders);
+        Bill bill = generateBill(orders, hasMembership);
     }
 
     public Orders receiveOrder() {
@@ -67,11 +68,9 @@ public class StoreController {
 
     private void checkNonPromotionalQuantity(Order order,Long quantity) {
         Answer answer = doLoop(() -> determineNonPromotionPurchase(order,quantity));
-        System.out.println(order.getQuantity());
         if (!answer.isYes()) {
             order.removeQuantity(quantity);
         }
-        System.out.println(order.getQuantity());
     }
 
     private Answer determineNonPromotionPurchase(Order order, Long quantity) {
@@ -79,11 +78,13 @@ public class StoreController {
         return Answer.from(input);
     }
 
-    private void generateBill(Orders orders) {
+    private Bill generateBill(Orders orders, boolean hasMembership) {
         List<BillingItem> billingItems = new ArrayList<>();
         for (Order order : orders.getOrders()) {
             billingItems.add(billingService.generateBillingItem(order));
         }
+        orderService.updateStock(billingItems);
+        return Bill.of(billingItems,hasMembership);
     }
 
     private boolean determineMembershipDiscount() {

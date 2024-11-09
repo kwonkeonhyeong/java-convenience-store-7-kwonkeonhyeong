@@ -38,7 +38,7 @@ public class Order {
     }
 
     public void removeQuantity(Long quantity) {
-        this.quantity = this.quantity.remove(quantity);
+        this.quantity = this.quantity.decrease(quantity);
     }
 
     public String getName() {

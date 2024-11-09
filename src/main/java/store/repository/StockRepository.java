@@ -11,7 +11,7 @@ import store.domain.vo.ProductName;
 
 public class StockRepository {
 
-    private static final List<Stock> store = new ArrayList<>();
+    public static final List<Stock> store = new ArrayList<>();
 
     static {
         try {
@@ -35,10 +35,6 @@ public class StockRepository {
                 .toList();
     }
 
-    public boolean existsPromotionByProductName(String name) {
-        return store.stream()
-                .anyMatch(stock -> stock.matchesProductName(name) && stock.isApplyPromotion());
-    }
 
     public Stock findByProductNameAndPromotionIsNotNull(String name) {
         return store.stream()
@@ -68,5 +64,25 @@ public class StockRepository {
         return store.stream()
                 .filter(stock -> stock.matchesProductName(name))
                 .toList();
+    }
+
+    public void decreaseQuantityWhereNameAndPromotionIsNull(String name, Long quantity) {
+        Stock target = findByProductNameAndPromotionIsNull(name);
+        target.decreaseQuantity(quantity);
+    }
+
+    public void decreaseQuantityWhereNameAndPromotionIsNotNull(String name, Long quantity) {
+        Stock target = findByProductNameAndPromotionIsNotNull(name);
+        target.decreaseQuantity(quantity);
+    }
+
+    public void deleteWhereNameAndPromotionIsNull(String name) {
+        Stock target = findByProductNameAndPromotionIsNull(name);
+        store.remove(target);
+    }
+
+    public void deleteWhereNameAndPromotionIsNotNull(String name) {
+        Stock target = findByProductNameAndPromotionIsNotNull(name);
+        store.remove(target);
     }
 }
