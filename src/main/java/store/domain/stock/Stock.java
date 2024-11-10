@@ -26,7 +26,7 @@ public class Stock {
     }
 
     public static Stock from(String inputStock) {
-        String[] split = inputStock.split(COMMA.getDelimiter());
+        String[] split = inputStock.split(COMMA.getDelimiter(),-1);
         String name = split[NAME_INDEX.getIndex()];
         String price = split[PRICE_INDEX.getIndex()];
         String quantity = split[QUANTITY_INDEX.getIndex()];
