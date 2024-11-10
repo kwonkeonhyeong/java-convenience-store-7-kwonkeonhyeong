@@ -28,13 +28,13 @@ public class Stock {
     public static Stock from(String inputStock) {
         String[] split = inputStock.split(COMMA.getDelimiter());
         String name = split[NAME_INDEX.getIndex()];
-        Long price = Long.parseLong(split[PRICE_INDEX.getIndex()]);
+        String price = split[PRICE_INDEX.getIndex()];
         String quantity = split[QUANTITY_INDEX.getIndex()];
         String promotionName = split[PROMOTION_INDEX.getIndex()];
         return createStock(name, price, quantity, promotionName);
     }
 
-    private static Stock createStock(String name, Long price, String quantity, String promotionName) {
+    private static Stock createStock(String name, String price, String quantity, String promotionName) {
         return new Stock(
                 ProductName.valueOf(name),
                 Price.valueOf(price),

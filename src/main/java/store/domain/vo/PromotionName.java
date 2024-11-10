@@ -25,4 +25,5 @@ public class PromotionName {
     public String toString() {
         return promotionName;
     }
+
 }
