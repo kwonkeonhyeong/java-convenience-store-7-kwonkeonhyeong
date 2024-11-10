@@ -38,22 +38,32 @@ public class StoreController {
     }
 
     public void run() {
-        boolean restart = true;
-        while (restart) {
+        do {
             displayCurrentStockState();
-            Orders orders = doLoop(this::receiveOrder);
-            checkPromotion(orders);
-            DiscountPolicy discountPolicy = doLoop(this::determineMembershipDiscount);
-            Bill bill = generateBill(orders, discountPolicy);
-            outputView.printBill(bill.formatBill());
-            orderService.updateStock(bill.getBillingItems());
-            restart = doLoop(this::determineAnotherOrder);
-        }
+            Bill bill = completeOrder();
+            displayBill(bill);
+            updateStock(bill);
+        } while (doLoop(this::determineAnotherOrder));
     }
 
     public Orders receiveOrder() {
         String input = inputView.enterOrder();
         return orderService.createOrders(input);
+    }
+
+    private Bill completeOrder() {
+        Orders orders = doLoop(this::receiveOrder);
+        checkPromotion(orders);
+        DiscountPolicy discountPolicy = doLoop(this::determineMembershipDiscount);
+        return generateBill(orders, discountPolicy);
+    }
+
+    private void displayBill(Bill bill) {
+        outputView.printBill(bill.formatBill());
+    }
+
+    private void updateStock(Bill bill) {
+        orderService.updateStock(bill.getBillingItems());
     }
 
     private void checkPromotion(Orders orders) {
