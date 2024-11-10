@@ -1,4 +1,4 @@
-package store.domain;
+package store.domain.stock;
 
 import static store.domain.constant.ProductInputIndex.NAME_INDEX;
 import static store.domain.constant.ProductInputIndex.PRICE_INDEX;

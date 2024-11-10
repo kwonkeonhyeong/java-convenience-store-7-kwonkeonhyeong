@@ -1,6 +1,10 @@
-package store.domain;
+package store.domain.billing;
 
 import static store.domain.constant.BillPattern.ITEM_FORMAT;
+
+import store.domain.stock.Promotion;
+import store.domain.stock.Stock;
+import store.domain.order.Order;
 
 public class BillingItem {
 

@@ -1,26 +1,23 @@
-package store.domain;
+package store.domain.billing;
 
 import static store.domain.constant.BillComponent.*;
 import static store.domain.constant.BillPattern.ITEM_FORMAT;
 
 import java.util.List;
+import store.domain.discount.DiscountPolicy;
 
 public class Bill {
 
-    private static final Long MEMBERSHIP_MAX_AMOUNT = 8000L;
-    private static final Long NON_MEMBERSHIP_AMOUNT = 0L;
-    private static final double MEMBERSHIP_DISCOUNT_RATE = 0.3;
-
     private final List<BillingItem> billingItems;
-    private final boolean hasMembership;
+    private final DiscountPolicy discountPolicy;
 
-    private Bill(List<BillingItem> billingItems, boolean hasMembership) {
+    private Bill(List<BillingItem> billingItems, DiscountPolicy discountPolicy) {
         this.billingItems = billingItems;
-        this.hasMembership = hasMembership;
+        this.discountPolicy = discountPolicy;
     }
 
-    public static Bill of(List<BillingItem> billingItems, boolean hasMembership) {
-        return new Bill(billingItems, hasMembership);
+    public static Bill of(List<BillingItem> billingItems, DiscountPolicy discountPolicy) {
+        return new Bill(billingItems, discountPolicy);
     }
 
     public Long totalPurchaseAmount() {
@@ -52,15 +49,8 @@ public class Bill {
     }
 
     public Long totalMembershipDiscountAmount() {
-        if (!hasMembership) {
-            return NON_MEMBERSHIP_AMOUNT;
-        }
         long discountableAmount = totalPurchaseAmount() - totalPromotionQuantityAmount();
-        long discountAmount = (long) ((discountableAmount) * (MEMBERSHIP_DISCOUNT_RATE));
-        if (discountAmount > MEMBERSHIP_MAX_AMOUNT) {
-            discountAmount = MEMBERSHIP_MAX_AMOUNT;
-        }
-        return discountAmount;
+        return discountPolicy.getDiscountAmount(discountableAmount);
     }
 
     public Long totalPaymentAmount() {

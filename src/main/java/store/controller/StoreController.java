@@ -3,17 +3,23 @@ package store.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import store.domain.Bill;
-import store.domain.BillingItem;
+import store.domain.billing.Bill;
+import store.domain.billing.BillingItem;
+import store.domain.discount.DiscountPolicy;
+import store.domain.discount.MembershipDiscountPolicy;
+import store.domain.discount.NonDiscountPolicy;
 import store.domain.vo.Answer;
-import store.domain.Order;
+import store.domain.order.Order;
 import store.service.BillingService;
 import store.service.OrderService;
-import store.domain.Orders;
+import store.domain.order.Orders;
 import store.service.StockService;
 import store.view.InputView;
 import store.view.OutputView;
 
+/*
+* StoreController에서 편의점 관련 로직 흐름을 관리
+* */
 public class StoreController {
 
     private final OrderService orderService;
@@ -37,8 +43,8 @@ public class StoreController {
             displayCurrentStockState();
             Orders orders = doLoop(this::receiveOrder);
             checkPromotion(orders);
-            boolean hasMembership = doLoop(this::determineMembershipDiscount);
-            Bill bill = generateBill(orders, hasMembership);
+            DiscountPolicy discountPolicy = doLoop(this::determineMembershipDiscount);
+            Bill bill = generateBill(orders, discountPolicy);
             outputView.printBill(bill.formatBill());
             orderService.updateStock(bill.getBillingItems());
             restart = doLoop(this::determineAnotherOrder);
@@ -86,18 +92,21 @@ public class StoreController {
         return Answer.from(input);
     }
 
-    private Bill generateBill(Orders orders, boolean hasMembership) {
+    private Bill generateBill(Orders orders, DiscountPolicy discountPolicy) {
         List<BillingItem> billingItems = new ArrayList<>();
         for (Order order : orders.getOrders()) {
             billingItems.add(billingService.generateBillingItem(order));
         }
-        return Bill.of(billingItems, hasMembership);
+        return Bill.of(billingItems, discountPolicy);
     }
 
-    private boolean determineMembershipDiscount() {
+    private DiscountPolicy determineMembershipDiscount() {
         String input = inputView.enterApplicableMembershipDiscount();
         Answer answer = Answer.from(input);
-        return answer.isYes();
+        if(answer.isYes()) {
+            return MembershipDiscountPolicy.newInstance();
+        }
+        return NonDiscountPolicy.newInstance();
     }
 
     private boolean determineAnotherOrder() {

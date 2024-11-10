@@ -8,7 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import store.util.FileHandler;
-import store.domain.Stock;
+import store.domain.stock.Stock;
 import store.domain.vo.ProductName;
 
 public class StockRepository {

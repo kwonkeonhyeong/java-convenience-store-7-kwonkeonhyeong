@@ -1,4 +1,4 @@
-package store.domain;
+package store.domain.order;
 
 import static store.util.constant.Delimiter.DASH;
 import static store.util.constant.ErrorMessage.INVALID_FORMAT;

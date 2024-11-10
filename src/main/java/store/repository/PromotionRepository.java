@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import store.util.FileHandler;
-import store.domain.Promotion;
+import store.domain.stock.Promotion;
 
 public class PromotionRepository {
 

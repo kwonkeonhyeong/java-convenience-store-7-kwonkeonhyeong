@@ -3,7 +3,7 @@ package store.service;
 import static store.domain.constant.StockPattern.STOCK_FORMAT;
 
 import java.util.List;
-import store.domain.Stock;
+import store.domain.stock.Stock;
 import store.domain.vo.ProductName;
 import store.repository.StockRepository;
 

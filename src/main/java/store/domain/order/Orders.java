@@ -1,4 +1,4 @@
-package store.domain;
+package store.domain.order;
 
 import static store.util.constant.Delimiter.COMMA;
 import static store.util.constant.ErrorMessage.INVALID_FORMAT;

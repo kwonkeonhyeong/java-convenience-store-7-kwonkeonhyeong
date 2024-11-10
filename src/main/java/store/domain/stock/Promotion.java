@@ -1,4 +1,4 @@
-package store.domain;
+package store.domain.stock;
 
 import static camp.nextstep.edu.missionutils.DateTimes.now;
 import static store.domain.constant.PromotionInputIndex.BUY_INDEX;
@@ -10,6 +10,7 @@ import static store.util.constant.Delimiter.COMMA;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import store.domain.order.Order;
 
 public class Promotion {
 

@@ -1,11 +1,11 @@
 package store.service;
 
 import java.util.List;
-import store.domain.BillingItem;
-import store.domain.Order;
-import store.domain.Orders;
-import store.domain.Promotion;
-import store.domain.Stock;
+import store.domain.billing.BillingItem;
+import store.domain.order.Order;
+import store.domain.order.Orders;
+import store.domain.stock.Promotion;
+import store.domain.stock.Stock;
 import store.repository.PromotionRepository;
 import store.repository.StockRepository;
 
