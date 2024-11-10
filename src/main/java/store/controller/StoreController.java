@@ -18,8 +18,9 @@ import store.view.InputView;
 import store.view.OutputView;
 
 /*
-* StoreController에서 편의점 관련 로직 흐름을 관리
-* */
+ * StoreController에서 편의점 관련 로직 흐름을 관리
+ * 서비스 관련 로직을 최대한 제거하고 model과 view를 중개할 수 있게 최대한 신경써서 구현하였음.
+ * */
 public class StoreController {
 
     private final OrderService orderService;
@@ -46,9 +47,9 @@ public class StoreController {
         } while (doLoop(this::determineAnotherOrder));
     }
 
-    public Orders receiveOrder() {
-        String input = inputView.enterOrder();
-        return orderService.createOrders(input);
+    private void displayCurrentStockState() {
+        outputView.printStocksStateHeader();
+        outputView.printCurrentStockState(stockService.formatCurrentStockState());
     }
 
     private Bill completeOrder() {
@@ -58,12 +59,17 @@ public class StoreController {
         return generateBill(orders, discountPolicy);
     }
 
+    private Orders receiveOrder() {
+        String input = inputView.enterOrder();
+        return orderService.createOrders(input);
+    }
+
     private void displayBill(Bill bill) {
         outputView.printBill(bill.formatBill());
     }
 
     private void updateStock(Bill bill) {
-        orderService.updateStock(bill.getBillingItems());
+        stockService.updateStock(bill.getBillingItems());
     }
 
     private void checkPromotion(Orders orders) {
@@ -113,7 +119,7 @@ public class StoreController {
     private DiscountPolicy determineMembershipDiscount() {
         String input = inputView.enterApplicableMembershipDiscount();
         Answer answer = Answer.from(input);
-        if(answer.isYes()) {
+        if (answer.isYes()) {
             return MembershipDiscountPolicy.newInstance();
         }
         return NonDiscountPolicy.newInstance();
@@ -123,11 +129,6 @@ public class StoreController {
         String input = inputView.enterAnotherOrder();
         Answer answer = Answer.from(input);
         return answer.isYes();
-    }
-
-    private void displayCurrentStockState() {
-        outputView.printStocksStateHeader();
-        outputView.printCurrentStockState(stockService.formatCurrentStockState());
     }
 
     private <T> T doLoop(Supplier<T> function) {

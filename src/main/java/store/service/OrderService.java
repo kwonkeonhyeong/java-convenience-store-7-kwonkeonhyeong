@@ -1,7 +1,6 @@
 package store.service;
 
 import java.util.List;
-import store.domain.billing.BillingItem;
 import store.domain.order.Order;
 import store.domain.order.Orders;
 import store.domain.stock.Promotion;
@@ -57,16 +56,6 @@ public class OrderService {
         return promotion.calculateNonPromotionalQuantity(order, promotionStock);
     }
 
-    public void updateStock(List<BillingItem> billingItems) {
-        for (BillingItem billingItem : billingItems) {
-            if (billingItem.hasPromotion()) {
-                updatePromotionStock(billingItem);
-                continue;
-            }
-            updateNormalStock(billingItem);
-        }
-    }
-
     private void hasStockQuantityAvailable(Order order) {
         List<Stock> productNames = stockRepository.findByProductName(order.getName());
         long availableStockQuantitySum = productNames.stream()
@@ -82,32 +71,6 @@ public class OrderService {
         if (!stockRepository.hasStockWith(order.getName())) {
             throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
         }
-    }
-
-    private void updatePromotionStock(BillingItem billingItem) {
-        if (billingItem.hasNoStock()) {
-            Long quantity = billingItem.calculateDeficitQuantity();
-            decreasePromotionStockQuantity(billingItem.getOrderProductName(), billingItem.getStockQuantity());
-            decreaseNormalStockQuantity(billingItem.getOrderProductName(), quantity);
-            return;
-        }
-        decreasePromotionStockQuantity(billingItem.getOrderProductName(), billingItem.getOrderQuantity());
-    }
-
-    private void updateNormalStock(BillingItem billingItem) {
-        if (billingItem.hasNoStock()) {
-            decreaseNormalStockQuantity(billingItem.getOrderProductName(), billingItem.getStockQuantity());
-            return;
-        }
-        decreaseNormalStockQuantity(billingItem.getOrderProductName(), billingItem.getOrderQuantity());
-    }
-
-    private void decreasePromotionStockQuantity(String name, Long quantity) {
-        stockRepository.decreaseQuantityWhereNameAndPromotionIsNotNull(name, quantity);
-    }
-
-    private void decreaseNormalStockQuantity(String name, Long quantity) {
-        stockRepository.decreaseQuantityWhereNameAndPromotionIsNull(name, quantity);
     }
 
 }
