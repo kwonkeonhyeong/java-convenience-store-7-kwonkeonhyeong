@@ -1,5 +1,7 @@
 package store.repository;
 
+import static store.util.constants.FilePath.PRODUCTS_FILE_PATH;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -14,26 +16,29 @@ public class StockRepository {
     private final List<Stock> store = new ArrayList<>();
 
     public StockRepository() {
-        init();
+        loadData();
     }
 
-    private void init() {
+    private void loadData() {
         try {
-            List<String> inputs = FileHandler.readFromFile("src/main/resources/products.md");
-            inputs.removeFirst();
-            for (String input : inputs) {
-                Stock stock = Stock.from(input);
-                store.add(stock);
-            }
+            List<String> inputs = FileHandler.readFromFile(PRODUCTS_FILE_PATH);
+            registerData(inputs);
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private void registerData(List<String> inputs) {
+        inputs.removeFirst();
+        for (String input : inputs) {
+            Stock stock = Stock.from(input);
+            store.add(stock);
         }
     }
 
     public List<Stock> findAll() {
         return store.stream().toList();
     }
-
 
     public List<ProductName> findDistinctProductNames() {
         return store.stream()

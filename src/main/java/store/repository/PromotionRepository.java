@@ -1,5 +1,7 @@
 package store.repository;
 
+import static store.util.constants.FilePath.PROMOTIONS_FILE_PATH;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,18 +10,26 @@ import store.domain.Promotion;
 
 public class PromotionRepository {
 
-    private static final List<Promotion> store = new ArrayList<>();
+    private final List<Promotion> store = new ArrayList<>();
 
-    static {
+    public PromotionRepository() {
+        loadData();
+    }
+
+    private void loadData() {
         try {
-            List<String> inputs = FileHandler.readFromFile("src/main/resources/promotions.md");
-            inputs.removeFirst();
-            for (String input : inputs) {
-                Promotion promotion = Promotion.from(input);
-                store.add(promotion);
-            }
+            List<String> inputs = FileHandler.readFromFile(PROMOTIONS_FILE_PATH);
+            registerData(inputs);
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private void registerData(List<String> inputs) {
+        inputs.removeFirst();
+        for (String input : inputs) {
+            Promotion promotion = Promotion.from(input);
+            store.add(promotion);
         }
     }
 
