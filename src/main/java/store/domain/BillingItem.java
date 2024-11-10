@@ -57,8 +57,8 @@ public class BillingItem {
 
     public String formatOrder() {
         String format = "%-10s %-5s %-10s\n";
-        Price price = stock.getPrice();
-        String formattedPrice = String.format("%,d", price.getPrice());
+        Long purchaseAmount = stock.calculateAmount(order.getQuantity());
+        String formattedPrice = String.format("%,d", purchaseAmount);
         return String.format(format, order.getName(), order.getQuantity(), formattedPrice);
     }
 

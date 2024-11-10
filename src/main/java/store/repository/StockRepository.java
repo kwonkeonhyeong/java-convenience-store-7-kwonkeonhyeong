@@ -30,6 +30,10 @@ public class StockRepository {
         }
     }
 
+    public List<Stock> findAll() {
+        return store.stream().toList();
+    }
+
 
     public List<ProductName> findDistinctProductNames() {
         return store.stream()

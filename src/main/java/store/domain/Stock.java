@@ -1,5 +1,7 @@
 package store.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import store.domain.vo.Price;
 import store.domain.vo.ProductName;
 import store.domain.vo.PromotionName;
@@ -56,6 +58,18 @@ public class Stock {
             return String.format("- %s %s원 재고 없음", productName, formattedPrice);
         }
         return String.format("- %s %s원 %s개", productName, formattedPrice, quantity);
+    }
+
+    public String formatStockData() {
+        List<String> format = new ArrayList<>();
+        format.add(productName.getName());
+        format.add(String.valueOf(price.getPrice()));
+        format.add(String.valueOf(quantity.getQuantity()));
+        if(promotionName != null ) {
+            format.add(promotionName.getPromotionName());
+        }
+        format.add("null");
+        return String.join(",",format);
     }
 
     public boolean isApplyPromotion() {

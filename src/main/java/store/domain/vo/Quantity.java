@@ -18,10 +18,6 @@ public class Quantity {
         return new Quantity(Long.parseLong(stripped));
     }
 
-    public static Quantity valueOf(Long quantity) {
-        return new Quantity(quantity);
-    }
-
     private static void validateEmpty(String input) {
         if (input == null || input.isEmpty()) {
             throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");

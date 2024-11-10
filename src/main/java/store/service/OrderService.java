@@ -77,7 +77,6 @@ public class OrderService {
             }
             updateNormalStock(billingItem);
         }
-
     }
 
     private void updatePromotionStock(BillingItem billingItem) {

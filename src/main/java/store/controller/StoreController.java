@@ -1,5 +1,6 @@
 package store.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -15,25 +16,25 @@ import store.domain.Stock;
 import store.domain.vo.Price;
 import store.domain.vo.ProductName;
 import store.repository.StockRepository;
+import store.util.FileHandler;
 import store.view.InputView;
 import store.view.OutputView;
 
 public class StoreController {
-    private final InputView inputView;
-    private final OutputView outputView;
-    private final StockRepository stockRepository;
-    private final PromotionRepository promotionRepository;
+
     private final OrderService orderService;
     private final BillingService billingService;
+    private final StockRepository stockRepository;
+    private final InputView inputView;
+    private final OutputView outputView;
 
-    public StoreController(InputView inputView, OutputView outputView, StockRepository stockRepository,
-                           PromotionRepository promotionRepository, OrderService orderService, BillingService billingService) {
-        this.inputView = inputView;
-        this.outputView = outputView;
-        this.stockRepository = stockRepository;
-        this.promotionRepository = promotionRepository;
+    public StoreController(OrderService orderService, BillingService billingService, StockRepository stockRepository,
+                           InputView inputView, OutputView outputView) {
         this.orderService = orderService;
         this.billingService = billingService;
+        this.stockRepository = stockRepository;
+        this.inputView = inputView;
+        this.outputView = outputView;
     }
 
     public void run() {
@@ -48,7 +49,7 @@ public class StoreController {
             orderService.updateStock(bill.getBillingItems());
             restart = doLoop(this::determineAnotherOrder);
         }
-
+//        saveStocks(setUpdateStocksData(),"src/main/resources/products.md");
     }
 
     public Orders receiveOrder() {
@@ -98,6 +99,25 @@ public class StoreController {
             billingItems.add(billingService.generateBillingItem(order));
         }
         return Bill.of(billingItems, hasMembership);
+    }
+
+    public void saveStocks(List<String> data, String filePath) {
+        try {
+            FileHandler.writeToFile(data, filePath);
+        } catch (IOException e) {
+            outputView.printMessage(e.getMessage());
+        }
+
+    }
+
+    public List<String> setUpdateStocksData() {
+        List<String> updateData = new ArrayList<>();
+        List<Stock> stocks = stockRepository.findAll();
+        updateData.add("name,price,quantity,promotion");
+        for (Stock stock : stocks) {
+            updateData.add(stock.formatStockData());
+        }
+        return updateData;
     }
 
     private boolean determineMembershipDiscount() {
