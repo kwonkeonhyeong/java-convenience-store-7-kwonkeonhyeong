@@ -1,7 +1,5 @@
 package store.controller;
 
-import static store.domain.constant.StockPattern.STOCK_FORMAT;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -12,9 +10,7 @@ import store.domain.Order;
 import store.service.BillingService;
 import store.service.OrderService;
 import store.domain.Orders;
-import store.domain.Stock;
-import store.domain.vo.ProductName;
-import store.repository.StockRepository;
+import store.service.StockService;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -22,15 +18,15 @@ public class StoreController {
 
     private final OrderService orderService;
     private final BillingService billingService;
-    private final StockRepository stockRepository;
+    private final StockService stockService;
     private final InputView inputView;
     private final OutputView outputView;
 
-    public StoreController(OrderService orderService, BillingService billingService, StockRepository stockRepository,
+    public StoreController(OrderService orderService, BillingService billingService, StockService stockService,
                            InputView inputView, OutputView outputView) {
         this.orderService = orderService;
         this.billingService = billingService;
-        this.stockRepository = stockRepository;
+        this.stockService = stockService;
         this.inputView = inputView;
         this.outputView = outputView;
     }
@@ -112,32 +108,7 @@ public class StoreController {
 
     private void displayCurrentStockState() {
         outputView.printStocksStateHeader();
-        List<ProductName> uniqueProductNames = stockRepository.findDistinctProductNames();
-        for (ProductName name : uniqueProductNames) {
-            Stock promotionStock = stockRepository.findByProductNameAndPromotionIsNotNull(name.getName());
-            Stock normalStock = stockRepository.findByProductNameAndPromotionIsNull(name.getName());
-            displayStockInfo(promotionStock, normalStock);
-        }
-    }
-
-    private void displayStockInfo(Stock promotionStock, Stock normalStock) {
-        displayStock(promotionStock);
-        displayStock(normalStock);
-        displayOutOfStock(normalStock, promotionStock);
-    }
-
-    private void displayStock(Stock stock) {
-        if (stock != null) {
-            outputView.printCurrentStockState(stock.format());
-        }
-    }
-
-    private void displayOutOfStock(Stock normalStock, Stock promotionStock) {
-        if (normalStock == null && promotionStock != null) {
-            String formatted = STOCK_FORMAT.formatStock(promotionStock.getProductName(), promotionStock.getPrice(), 0L,
-                    null);
-            outputView.printCurrentStockState(formatted);
-        }
+        outputView.printCurrentStockState(stockService.formatCurrentStockState());
     }
 
     private <T> T doLoop(Supplier<T> function) {

@@ -5,6 +5,7 @@ import store.repository.PromotionRepository;
 import store.repository.StockRepository;
 import store.service.BillingService;
 import store.service.OrderService;
+import store.service.StockService;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -16,7 +17,7 @@ public class AppConfig {
         return new StoreController(
                 createOrderService(stockRepository, promotionRepository),
                 createBillingService(stockRepository, promotionRepository),
-                stockRepository,
+                createStockService(stockRepository),
                 createInputView(),
                 createOutputView()
         );
@@ -28,6 +29,10 @@ public class AppConfig {
 
     private PromotionRepository createPromotionRepository() {
         return new PromotionRepository();
+    }
+
+    private StockService createStockService(StockRepository stockRepository) {
+        return new StockService(stockRepository);
     }
 
     private OrderService createOrderService(StockRepository stockRepository, PromotionRepository promotionRepository) {

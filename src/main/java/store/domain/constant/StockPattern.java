@@ -8,7 +8,7 @@ import store.domain.vo.PromotionName;
 
 public enum StockPattern {
 
-    STOCK_FORMAT("- %s %s원 %s %s");
+    STOCK_FORMAT("- %s %s원 %s %s\n");
 
     private static final String OUT_OF_STOCK_MESSAGE = "재고 없음";
     private static final String QUANTITY_PATTERN = "%s개";

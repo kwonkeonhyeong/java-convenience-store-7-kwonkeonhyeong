@@ -21,7 +21,6 @@ public class Promotion {
     private final LocalDate startDate;
     private final LocalDate endDate;
 
-
     private Promotion(String name, Long buy, Long get, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.buy = buy;
@@ -90,4 +89,5 @@ public class Promotion {
                 ", endDate=" + endDate +
                 '}';
     }
+
 }
