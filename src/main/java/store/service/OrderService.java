@@ -7,7 +7,11 @@ import store.domain.stock.Promotion;
 import store.domain.stock.Stock;
 import store.repository.PromotionRepository;
 import store.repository.StockRepository;
-
+/*
+* 주문 관련 기능을 구현
+* 현재는 StockService와 함께 협력하여 일하는 부분이 없는데 이 부분을 고려해보자
+* OrderService에 재고 수량을 직접적으로 관리하는 부분은 없기는 함.
+* */
 public class OrderService {
 
     private static final String PRODUCT_NOT_FOUND = "[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.";
@@ -44,7 +48,7 @@ public class OrderService {
         return promotion.isAdditionalOrder(order, promotionStock);
     }
 
-    public Long confirmPurchaseWithoutPromotion(Order order) {
+    public Long calculatePurchaseQuantityWithoutPromotion(Order order) {
         Stock promotionStock = stockRepository.findByProductNameAndPromotionIsNotNull(order.getName());
         if (promotionStock == null) {
             return NON_PROMOTION_QUANTITY;
@@ -56,6 +60,12 @@ public class OrderService {
         return promotion.calculateNonPromotionalQuantity(order, promotionStock);
     }
 
+    private void checkOrderProductExists(Order order) {
+        if (!stockRepository.hasStockWith(order.getName())) {
+            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
+        }
+    }
+
     private void hasStockQuantityAvailable(Order order) {
         List<Stock> productNames = stockRepository.findByProductName(order.getName());
         long availableStockQuantitySum = productNames.stream()
@@ -64,12 +74,6 @@ public class OrderService {
                 .sum();
         if (availableStockQuantitySum < order.getQuantity()) {
             throw new IllegalArgumentException(OUT_OF_STOCK);
-        }
-    }
-
-    private void checkOrderProductExists(Order order) {
-        if (!stockRepository.hasStockWith(order.getName())) {
-            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
         }
     }
 

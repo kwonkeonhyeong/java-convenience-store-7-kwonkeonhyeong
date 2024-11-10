@@ -56,7 +56,7 @@ public class StoreController {
         Orders orders = doLoop(this::receiveOrder);
         checkPromotion(orders);
         DiscountPolicy discountPolicy = doLoop(this::determineMembershipDiscount);
-        return generateBill(orders, discountPolicy);
+        return billingService.generateBill(orders,discountPolicy);
     }
 
     private Orders receiveOrder() {
@@ -77,7 +77,7 @@ public class StoreController {
             if (orderService.needsAdditionalOrder(order)) {
                 checkAddOrder(order);
             }
-            Long quantity = orderService.confirmPurchaseWithoutPromotion(order);
+            Long quantity = orderService.calculatePurchaseQuantityWithoutPromotion(order);
             if (quantity != 0L) {
                 checkNonPromotionalQuantity(order, quantity);
             }
@@ -106,14 +106,6 @@ public class StoreController {
     private Answer determineNonPromotionPurchase(Order order, Long quantity) {
         String input = inputView.enterNonPromotionPurchase(order.getName(), quantity);
         return Answer.from(input);
-    }
-
-    private Bill generateBill(Orders orders, DiscountPolicy discountPolicy) {
-        List<BillingItem> billingItems = new ArrayList<>();
-        for (Order order : orders.getOrders()) {
-            billingItems.add(billingService.generateBillingItem(order));
-        }
-        return Bill.of(billingItems, discountPolicy);
     }
 
     private DiscountPolicy determineMembershipDiscount() {
