@@ -11,21 +11,31 @@ import store.view.OutputView;
 public class AppConfig {
 
     public StoreController createStoreController() {
+        StockRepository stockRepository = createStockRepository();
+        PromotionRepository promotionRepository = createPromotionRepository();
         return new StoreController(
-                createOrderService(),
-                createBillingService(),
-                new StockRepository(),
+                createOrderService(stockRepository, promotionRepository),
+                createBillingService(stockRepository, promotionRepository),
+                stockRepository,
                 createInputView(),
                 createOutputView()
         );
     }
 
-    public OrderService createOrderService() {
-        return new OrderService(new StockRepository(), new PromotionRepository());
+    public StockRepository createStockRepository() {
+        return new StockRepository();
     }
 
-    public BillingService createBillingService() {
-        return new BillingService(new StockRepository(), new PromotionRepository());
+    public PromotionRepository createPromotionRepository() {
+        return new PromotionRepository();
+    }
+
+    public OrderService createOrderService(StockRepository stockRepository, PromotionRepository promotionRepository) {
+        return new OrderService(stockRepository, promotionRepository);
+    }
+
+    public BillingService createBillingService(StockRepository stockRepository, PromotionRepository promotionRepository) {
+        return new BillingService(stockRepository, promotionRepository);
     }
 
     public InputView createInputView() {

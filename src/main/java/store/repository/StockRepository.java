@@ -1,6 +1,6 @@
 package store.repository;
 
-import static store.util.constants.FilePath.PRODUCTS_FILE_PATH;
+import static store.util.constant.FilePath.PRODUCTS_FILE_PATH;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class StockRepository {
 
     private void loadData() {
         try {
-            List<String> inputs = FileHandler.readFromFile(PRODUCTS_FILE_PATH);
+            List<String> inputs = FileHandler.readFromFile(PRODUCTS_FILE_PATH.getPath());
             registerData(inputs);
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -34,10 +34,6 @@ public class StockRepository {
             Stock stock = Stock.from(input);
             store.add(stock);
         }
-    }
-
-    public List<Stock> findAll() {
-        return store.stream().toList();
     }
 
     public List<ProductName> findDistinctProductNames() {

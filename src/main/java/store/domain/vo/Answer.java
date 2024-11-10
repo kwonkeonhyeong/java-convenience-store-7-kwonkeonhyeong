@@ -1,5 +1,7 @@
 package store.domain.vo;
 
+import static store.util.constant.ErrorMessage.INVALID_FORMAT;
+
 public class Answer {
 
     private final String answer;
@@ -19,7 +21,7 @@ public class Answer {
 
     private static void validate(String input) {
         if (!(input.equals("Y") || input.equals("N"))) {
-            throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(INVALID_FORMAT.getMessage());
         }
     }
 }

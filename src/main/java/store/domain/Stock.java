@@ -1,7 +1,12 @@
 package store.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import static store.domain.constant.ProductInputIndex.NAME_INDEX;
+import static store.domain.constant.ProductInputIndex.PRICE_INDEX;
+import static store.domain.constant.ProductInputIndex.PROMOTION_INDEX;
+import static store.domain.constant.ProductInputIndex.QUANTITY_INDEX;
+import static store.domain.constant.StockPattern.STOCK_FORMAT;
+import static store.util.constant.Delimiter.COMMA;
+
 import store.domain.vo.Price;
 import store.domain.vo.ProductName;
 import store.domain.vo.PromotionName;
@@ -21,11 +26,11 @@ public class Stock {
     }
 
     public static Stock from(String inputStock) {
-        String[] split = inputStock.split(",");
-        String name = split[0];
-        Long price = Long.parseLong(split[1]);
-        String quantity = split[2];
-        String promotionName = split[3];
+        String[] split = inputStock.split(COMMA.getDelimiter());
+        String name = split[NAME_INDEX.getIndex()];
+        Long price = Long.parseLong(split[PRICE_INDEX.getIndex()]);
+        String quantity = split[QUANTITY_INDEX.getIndex()];
+        String promotionName = split[PROMOTION_INDEX.getIndex()];
         return createStock(name, price, quantity, promotionName);
     }
 
@@ -39,37 +44,7 @@ public class Stock {
     }
 
     public String format() {
-        String formattedPrice = String.format("%,d", price.getPrice());
-        if (promotionName == null) {
-            return formatNormalStock(formattedPrice);
-        }
-        return formatPromotionStock(formattedPrice);
-    }
-
-    private String formatPromotionStock(String formattedPrice) {
-        if (quantity.getQuantity() == 0L) {
-            return String.format("- %s %s원 재고 없음 %s", productName, formattedPrice, promotionName);
-        }
-        return String.format("- %s %s원 %s개 %s", productName, formattedPrice, quantity, promotionName);
-    }
-
-    private String formatNormalStock(String formattedPrice) {
-        if (quantity.getQuantity() == 0L) {
-            return String.format("- %s %s원 재고 없음", productName, formattedPrice);
-        }
-        return String.format("- %s %s원 %s개", productName, formattedPrice, quantity);
-    }
-
-    public String formatStockData() {
-        List<String> format = new ArrayList<>();
-        format.add(productName.getName());
-        format.add(String.valueOf(price.getPrice()));
-        format.add(String.valueOf(quantity.getQuantity()));
-        if(promotionName != null ) {
-            format.add(promotionName.getPromotionName());
-        }
-        format.add("null");
-        return String.join(",",format);
+        return STOCK_FORMAT.formatStock(productName, price, quantity.getQuantity(), promotionName);
     }
 
     public boolean isApplyPromotion() {

@@ -1,6 +1,9 @@
 package store.domain.vo;
 
 public class PromotionName {
+
+    private static final String NON_PROMOTION_DEFAULT_DATA = "null";
+
     private final String promotionName;
 
     private PromotionName(String promotionName) {
@@ -8,7 +11,7 @@ public class PromotionName {
     }
 
     public static PromotionName valueOf(String input) {
-        if (input.equals("null")) {
+        if (input.equals(NON_PROMOTION_DEFAULT_DATA)) {
             return null;
         }
         return new PromotionName(input);

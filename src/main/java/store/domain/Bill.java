@@ -1,8 +1,15 @@
 package store.domain;
 
+import static store.domain.constant.BillComponent.*;
+import static store.domain.constant.BillPattern.ITEM_FORMAT;
+
 import java.util.List;
 
 public class Bill {
+
+    private static final Long MEMBERSHIP_MAX_AMOUNT = 8000L;
+    private static final Long NON_MEMBERSHIP_AMOUNT = 0L;
+    private static final double MEMBERSHIP_DISCOUNT_RATE = 0.3;
 
     private final List<BillingItem> billingItems;
     private final boolean hasMembership;
@@ -32,7 +39,7 @@ public class Bill {
 
     public Long totalPromotionQuantityAmount() {
         return billingItems.stream()
-                .map(BillingItem::calculatePromotionQuantityAmount)
+                .map(BillingItem::calculatePromotionAmount)
                 .mapToLong(Long::longValue)
                 .sum();
     }
@@ -46,11 +53,12 @@ public class Bill {
 
     public Long totalMembershipDiscountAmount() {
         if (!hasMembership) {
-            return 0L;
+            return NON_MEMBERSHIP_AMOUNT;
         }
-        long discountAmount = (long) ((totalPurchaseAmount() - totalPromotionQuantityAmount()) * (0.3));
-        if (discountAmount > 8000) {
-            discountAmount = 8000L;
+        long discountableAmount = totalPurchaseAmount() - totalPromotionQuantityAmount();
+        long discountAmount = (long) ((discountableAmount) * (MEMBERSHIP_DISCOUNT_RATE));
+        if (discountAmount > MEMBERSHIP_MAX_AMOUNT) {
+            discountAmount = MEMBERSHIP_MAX_AMOUNT;
         }
         return discountAmount;
     }
@@ -71,23 +79,27 @@ public class Bill {
 
     private String formatOrderArea() {
         StringBuilder stringBuilder = new StringBuilder();
-        String format = "%-10s %-5s %-10s\n";
-        stringBuilder.append("==============W 편의점================\n");
-        stringBuilder.append(String.format(format, "상품명", "수량", "금액"));
+        stringBuilder.append(ORDER_HEADER.getComponent());
+        String orderHeader = ITEM_FORMAT.formatHeader(
+                PRODUCT_HEADER.getComponent(),
+                QUANTITY_HEADER.getComponent(),
+                AMOUNT_HEADER.getComponent()
+        );
+        stringBuilder.append(orderHeader);
         stringBuilder.append(formatOrders());
         return stringBuilder.toString();
     }
 
     private String formatPromotionArea() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("=============증정================\n");
+        stringBuilder.append(PROMOTION_HEADER.getComponent());
         stringBuilder.append(formatPromotions());
         return stringBuilder.toString();
     }
 
     private String formatPaymentArea() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("===================================\n");
+        stringBuilder.append(SUMMARY_HEADER.getComponent());
         stringBuilder.append(formatTotalPurchaseAmount());
         stringBuilder.append(formatTotalPromotionDiscountAmount());
         stringBuilder.append(formatMembershipDiscountAmount());
@@ -117,27 +129,34 @@ public class Bill {
     }
 
     private String formatTotalPurchaseAmount() {
-        String format = "%-10s %-5s %-10s\n";
-        String formattedPrice = String.format("%,d", totalPurchaseAmount());
-        return String.format(format, "총구매액", totalOrderQuantity(), formattedPrice);
+        return ITEM_FORMAT.formatPaymentSummaryItem(
+                TOTAL_PURCHASE_AMOUNT_LABEL,
+                totalOrderQuantity(),
+                totalPurchaseAmount()
+        );
     }
 
     private String formatTotalPromotionDiscountAmount() {
-        String format = "%-10s %-5s %-10s\n";
-        String formattedPrice = String.format("-%,d", totalPromotionDiscountAmount());
-        return String.format(format, "행사할인", "", formattedPrice);
+        return ITEM_FORMAT.formatPaymentSummaryItem(
+                TOTAL_PROMOTION_DISCOUNT_AMOUNT_LABEL,
+                null,
+                totalPromotionDiscountAmount()
+        );
     }
 
     private String formatMembershipDiscountAmount() {
-        String format = "%-10s %-5s %-10s\n";
-        String formattedPrice = String.format("-%,d", totalMembershipDiscountAmount());
-        return String.format(format, "멤버십할인", "", formattedPrice);
+        return ITEM_FORMAT.formatPaymentSummaryItem(
+                MEMBERSHIP_DISCOUNT_LABEL,
+                null,
+                totalMembershipDiscountAmount()
+        );
     }
 
     private String formatPaymentAmount() {
-        String format = "%-10s %-5s %-10s\n";
-        String formattedPrice = String.format("%,d", totalPaymentAmount());
-        return String.format(format, "내실돈", "", formattedPrice);
+        return ITEM_FORMAT.formatPaymentAmountItem(
+                PAYMENT_AMOUNT_LABEL,
+                totalPaymentAmount()
+        );
     }
 
     public List<BillingItem> getBillingItems() {

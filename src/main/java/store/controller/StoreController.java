@@ -1,6 +1,7 @@
 package store.controller;
 
-import java.io.IOException;
+import static store.domain.constant.StockPattern.STOCK_FORMAT;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -8,15 +9,12 @@ import store.domain.Bill;
 import store.domain.BillingItem;
 import store.domain.vo.Answer;
 import store.domain.Order;
-import store.repository.PromotionRepository;
 import store.service.BillingService;
 import store.service.OrderService;
 import store.domain.Orders;
 import store.domain.Stock;
-import store.domain.vo.Price;
 import store.domain.vo.ProductName;
 import store.repository.StockRepository;
-import store.util.FileHandler;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -49,7 +47,6 @@ public class StoreController {
             orderService.updateStock(bill.getBillingItems());
             restart = doLoop(this::determineAnotherOrder);
         }
-//        saveStocks(setUpdateStocksData(),"src/main/resources/products.md");
     }
 
     public Orders receiveOrder() {
@@ -101,25 +98,6 @@ public class StoreController {
         return Bill.of(billingItems, hasMembership);
     }
 
-    public void saveStocks(List<String> data, String filePath) {
-        try {
-            FileHandler.writeToFile(data, filePath);
-        } catch (IOException e) {
-            outputView.printMessage(e.getMessage());
-        }
-
-    }
-
-    public List<String> setUpdateStocksData() {
-        List<String> updateData = new ArrayList<>();
-        List<Stock> stocks = stockRepository.findAll();
-        updateData.add("name,price,quantity,promotion");
-        for (Stock stock : stocks) {
-            updateData.add(stock.formatStockData());
-        }
-        return updateData;
-    }
-
     private boolean determineMembershipDiscount() {
         String input = inputView.enterApplicableMembershipDiscount();
         Answer answer = Answer.from(input);
@@ -156,9 +134,7 @@ public class StoreController {
 
     private void displayOutOfStock(Stock normalStock, Stock promotionStock) {
         if (normalStock == null && promotionStock != null) {
-            Price price = promotionStock.getPrice();
-            String formattedPrice = String.format("%,d", price.getPrice());
-            String formatted = String.format("- %s %s원 재고 없음", promotionStock.getProductName(), formattedPrice);
+            String formatted = STOCK_FORMAT.formatStock(promotionStock.getProductName(), promotionStock.getPrice(), 0L, null);
             outputView.printCurrentStockState(formatted);
         }
     }

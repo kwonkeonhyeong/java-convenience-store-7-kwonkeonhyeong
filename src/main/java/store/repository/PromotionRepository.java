@@ -1,6 +1,6 @@
 package store.repository;
 
-import static store.util.constants.FilePath.PROMOTIONS_FILE_PATH;
+import static store.util.constant.FilePath.PROMOTIONS_FILE_PATH;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class PromotionRepository {
 
     private void loadData() {
         try {
-            List<String> inputs = FileHandler.readFromFile(PROMOTIONS_FILE_PATH);
+            List<String> inputs = FileHandler.readFromFile(PROMOTIONS_FILE_PATH.getPath());
             registerData(inputs);
         } catch (IOException e) {
             System.out.println(e.getMessage());

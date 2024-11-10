@@ -11,6 +11,12 @@ import store.repository.StockRepository;
 
 public class OrderService {
 
+    private static final String PRODUCT_NOT_FOUND = "[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.";
+    private static final String OUT_OF_STOCK = "[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.";
+
+    private static final Long NON_PROMOTION_QUANTITY = 0L;
+
+
     private final StockRepository stockRepository;
     private final PromotionRepository promotionRepository;
 
@@ -30,7 +36,7 @@ public class OrderService {
 
     private void checkOrderProductExists(Order order) {
         if (!stockRepository.hasStockWith(order.getName())) {
-            throw new IllegalArgumentException("[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
         }
     }
 
@@ -41,7 +47,7 @@ public class OrderService {
                 .mapToLong(Long::longValue)
                 .sum();
         if (availableStockQuantitySum < order.getQuantity()) {
-            throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(OUT_OF_STOCK);
         }
     }
 
@@ -60,11 +66,11 @@ public class OrderService {
     public Long confirmPurchaseWithoutPromotion(Order order) {
         Stock promotionStock = stockRepository.findByProductNameAndPromotionIsNotNull(order.getName());
         if (promotionStock == null) {
-            return 0L;
+            return NON_PROMOTION_QUANTITY;
         }
         Promotion promotion = promotionRepository.findByPromotionName(promotionStock.getPromotionName());
         if (promotion.isNonPromotionDate()) {
-            return 0L;
+            return NON_PROMOTION_QUANTITY;
         }
         return promotion.calculateNonPromotionalQuantity(order, promotionStock);
     }

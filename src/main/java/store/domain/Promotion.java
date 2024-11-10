@@ -1,11 +1,19 @@
 package store.domain;
 
 import static camp.nextstep.edu.missionutils.DateTimes.now;
+import static store.domain.constant.PromotionInputIndex.BUY_INDEX;
+import static store.domain.constant.PromotionInputIndex.END_DATE_INDEX;
+import static store.domain.constant.PromotionInputIndex.GET_INDEX;
+import static store.domain.constant.PromotionInputIndex.NAME_INDEX;
+import static store.domain.constant.PromotionInputIndex.START_DATE_INDEX;
+import static store.util.constant.Delimiter.COMMA;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Promotion {
+
+    private final long NON_PROMOTION_QUANTITY = 0L;
 
     private final String name;
     private final Long buy;
@@ -23,12 +31,12 @@ public class Promotion {
     }
 
     public static Promotion from(String input) {
-        String[] split = input.split(",");
-        String name = split[0];
-        Long buy = Long.parseLong(split[1]);
-        Long get = Long.parseLong(split[2]);
-        LocalDate startDate = LocalDate.parse(split[3]);
-        LocalDate endDate = LocalDate.parse(split[4]);
+        String[] split = input.split(COMMA.getDelimiter());
+        String name = split[NAME_INDEX.getIndex()];
+        Long buy = Long.parseLong(split[BUY_INDEX.getIndex()]);
+        Long get = Long.parseLong(split[GET_INDEX.getIndex()]);
+        LocalDate startDate = LocalDate.parse(split[START_DATE_INDEX.getIndex()]);
+        LocalDate endDate = LocalDate.parse(split[END_DATE_INDEX.getIndex()]);
         return new Promotion(name, buy, get, startDate, endDate);
     }
 
@@ -54,12 +62,12 @@ public class Promotion {
         if ((orderQuantity = order.getQuantity()) >= (stockQuantity = stock.getQuantity())) {
             return orderQuantity - ((stockQuantity/(buy+get)) * (buy+get));
         }
-        return 0L;
+        return NON_PROMOTION_QUANTITY;
     }
 
     public Long calculatePromotionGiftQuantity(Order order, Stock stock) {
         if(isNonPromotionDate()){
-            return 0L;
+            return NON_PROMOTION_QUANTITY;
         }
         Long orderQuantity, stockQuantity;
         if ((orderQuantity = order.getQuantity()) >= (stockQuantity = stock.getQuantity())) {

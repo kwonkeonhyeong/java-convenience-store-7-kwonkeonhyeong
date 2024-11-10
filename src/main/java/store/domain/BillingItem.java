@@ -1,8 +1,11 @@
 package store.domain;
 
-import store.domain.vo.Price;
+import static store.domain.constant.BillPattern.ITEM_FORMAT;
 
 public class BillingItem {
+
+    private static final Long NON_PROMOTION_QUANTITY = 0L;
+    private static final Long NON_PROMOTION_AMOUNT = 0L;
 
     private final Order order;
     private final Stock stock;
@@ -22,7 +25,7 @@ public class BillingItem {
         if (promotion != null) {
             return promotion.calculatePromotionGiftQuantity(order, stock);
         }
-        return 0L;
+        return NON_PROMOTION_QUANTITY;
     }
 
     public Long calculateDeficitQuantity() {
@@ -35,12 +38,12 @@ public class BillingItem {
         return stock.calculateAmount(order.getQuantity());
     }
 
-    public Long calculatePromotionQuantityAmount() {
+    public Long calculatePromotionAmount() {
         if(hasPromotion()) {
             Long promotionQuantity = promotion.calculatePromotionQuantity(checkPromotionGiftQuantity());
             return stock.calculateAmount(promotionQuantity);
         }
-        return 0L;
+        return NON_PROMOTION_AMOUNT;
     }
 
     public Long calculatePromotionDiscountAmount() {
@@ -56,15 +59,19 @@ public class BillingItem {
     }
 
     public String formatOrder() {
-        String format = "%-10s %-5s %-10s\n";
-        Long purchaseAmount = stock.calculateAmount(order.getQuantity());
-        String formattedPrice = String.format("%,d", purchaseAmount);
-        return String.format(format, order.getName(), order.getQuantity(), formattedPrice);
+        return ITEM_FORMAT.formatOrderItem(
+                order.getName(),
+                order.getQuantity(),
+                stock.calculateAmount(order.getQuantity())
+        );
     }
 
     public String formatPromotion() {
-        String format = "%-10s %-5s\n";
-        return String.format(format, order.getName(), checkPromotionGiftQuantity());
+        return ITEM_FORMAT.formatOrderItem(
+                order.getName(),
+                checkPromotionGiftQuantity(),
+                null
+        );
     }
 
     public String getOrderProductName() {

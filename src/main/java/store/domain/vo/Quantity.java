@@ -1,8 +1,15 @@
 package store.domain.vo;
 
+import static store.util.constant.ErrorMessage.INVALID_FORMAT;
+
 import java.util.Objects;
 
 public class Quantity {
+
+    private static final String INVALID_MIN_QUANTITY = "[ERROR] 수량은 0 이상이어야 합니다.";
+
+    private static final int MIN_QUANTITY = 0;
+    private static final int INCREMENT_QUANTITY = 1;
 
     private final Long quantity;
 
@@ -20,7 +27,7 @@ public class Quantity {
 
     private static void validateEmpty(String input) {
         if (input == null || input.isEmpty()) {
-            throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(INVALID_FORMAT.getMessage());
         }
     }
 
@@ -28,7 +35,7 @@ public class Quantity {
         try {
             Long.parseLong(input);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(INVALID_FORMAT.getMessage());
         }
     }
 
@@ -37,13 +44,13 @@ public class Quantity {
     }
 
     private void validateMixQuantity(Long quantity) {
-        if (quantity < 0) {
-            throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.");
+        if (quantity < MIN_QUANTITY) {
+            throw new IllegalArgumentException(INVALID_MIN_QUANTITY);
         }
     }
 
     public Quantity add() {
-        return new Quantity(quantity+1);
+        return new Quantity(quantity + INCREMENT_QUANTITY);
     }
 
     public Quantity decrease(Long quantity) {

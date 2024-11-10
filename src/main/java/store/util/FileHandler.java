@@ -1,5 +1,8 @@
 package store.util;
 
+import static store.util.constant.ErrorMessage.FAIL_FILE_UPDATE;
+import static store.util.constant.ErrorMessage.FAIL_FILE_UPLOAD;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileHandler {
+
     public static List<String> readFromFile(String filePath) throws IOException {
         List<String> data = new ArrayList<>();
         try (
@@ -16,7 +20,7 @@ public class FileHandler {
         ) {
             addToken(data, reader);
         } catch (IOException e) {
-            throw new IOException("[Error] 파일을 업로드할 수 없습니다.");
+            throw new IOException(FAIL_FILE_UPLOAD.getMessage());
         }
         return data;
     }
@@ -31,7 +35,7 @@ public class FileHandler {
                 writer.println(str);
             }
         } catch (FileNotFoundException e) {
-            throw new IOException("[Error] 파일 업데이트를 실패했습니다");
+            throw new IOException(FAIL_FILE_UPDATE.getMessage());
         }
     }
 
