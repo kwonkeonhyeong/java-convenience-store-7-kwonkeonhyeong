@@ -39,6 +39,14 @@ public class Quantity {
         }
     }
 
+    public Quantity add() {
+        return new Quantity(quantity + INCREMENT_QUANTITY);
+    }
+
+    public Quantity decrease(Long quantity) {
+        return new Quantity(this.quantity - quantity);
+    }
+
     private void validate(Long quantity) {
         validateMixQuantity(quantity);
     }
@@ -47,14 +55,6 @@ public class Quantity {
         if (quantity < MIN_QUANTITY) {
             throw new IllegalArgumentException(INVALID_MIN_QUANTITY);
         }
-    }
-
-    public Quantity add() {
-        return new Quantity(quantity + INCREMENT_QUANTITY);
-    }
-
-    public Quantity decrease(Long quantity) {
-        return new Quantity(this.quantity-quantity);
     }
 
     public Long getQuantity() {

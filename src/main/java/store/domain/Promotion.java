@@ -52,7 +52,7 @@ public class Promotion {
     public boolean isAdditionalOrder(Order order, Stock stock) {
         Long orderQuantity;
         if ((orderQuantity = order.getQuantity()) < stock.getQuantity()) {
-            return orderQuantity%(buy+get) == buy;
+            return orderQuantity % (buy + get) == buy;
         }
         return false;
     }
@@ -60,24 +60,24 @@ public class Promotion {
     public Long calculateNonPromotionalQuantity(Order order, Stock stock) {
         Long orderQuantity, stockQuantity;
         if ((orderQuantity = order.getQuantity()) >= (stockQuantity = stock.getQuantity())) {
-            return orderQuantity - ((stockQuantity/(buy+get)) * (buy+get));
+            return orderQuantity - ((stockQuantity / (buy + get)) * (buy + get));
         }
         return NON_PROMOTION_QUANTITY;
     }
 
     public Long calculatePromotionGiftQuantity(Order order, Stock stock) {
-        if(isNonPromotionDate()){
+        if (isNonPromotionDate()) {
             return NON_PROMOTION_QUANTITY;
         }
         Long orderQuantity, stockQuantity;
         if ((orderQuantity = order.getQuantity()) >= (stockQuantity = stock.getQuantity())) {
-            return stockQuantity/(buy+get);
+            return stockQuantity / (buy + get);
         }
-        return orderQuantity/(buy+get);
+        return orderQuantity / (buy + get);
     }
 
     public Long calculatePromotionQuantity(Long giftQuantity) {
-        return giftQuantity * (buy+get);
+        return giftQuantity * (buy + get);
     }
 
     @Override

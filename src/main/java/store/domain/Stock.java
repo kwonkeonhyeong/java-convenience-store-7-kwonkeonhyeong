@@ -60,7 +60,7 @@ public class Stock {
     }
 
     public Long calculateAmount(Long quantity) {
-        return quantity* price.getPrice();
+        return quantity * price.getPrice();
     }
 
     public ProductName getProductName() {

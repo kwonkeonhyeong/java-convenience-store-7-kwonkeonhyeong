@@ -16,7 +16,6 @@ public class OrderService {
 
     private static final Long NON_PROMOTION_QUANTITY = 0L;
 
-
     private final StockRepository stockRepository;
     private final PromotionRepository promotionRepository;
 
@@ -32,23 +31,6 @@ public class OrderService {
             hasStockQuantityAvailable(order);
         }
         return orders;
-    }
-
-    private void checkOrderProductExists(Order order) {
-        if (!stockRepository.hasStockWith(order.getName())) {
-            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
-        }
-    }
-
-    private void hasStockQuantityAvailable(Order order) {
-        List<Stock> productNames = stockRepository.findByProductName(order.getName());
-        long availableStockQuantitySum = productNames.stream()
-                .map(Stock::getQuantity)
-                .mapToLong(Long::longValue)
-                .sum();
-        if (availableStockQuantitySum < order.getQuantity()) {
-            throw new IllegalArgumentException(OUT_OF_STOCK);
-        }
     }
 
     public boolean needsAdditionalOrder(Order order) {
@@ -85,6 +67,23 @@ public class OrderService {
         }
     }
 
+    private void hasStockQuantityAvailable(Order order) {
+        List<Stock> productNames = stockRepository.findByProductName(order.getName());
+        long availableStockQuantitySum = productNames.stream()
+                .map(Stock::getQuantity)
+                .mapToLong(Long::longValue)
+                .sum();
+        if (availableStockQuantitySum < order.getQuantity()) {
+            throw new IllegalArgumentException(OUT_OF_STOCK);
+        }
+    }
+
+    private void checkOrderProductExists(Order order) {
+        if (!stockRepository.hasStockWith(order.getName())) {
+            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
+        }
+    }
+
     private void updatePromotionStock(BillingItem billingItem) {
         if (billingItem.hasNoStock()) {
             Long quantity = billingItem.calculateDeficitQuantity();
@@ -110,4 +109,5 @@ public class OrderService {
     private void decreaseNormalStockQuantity(String name, Long quantity) {
         stockRepository.decreaseQuantityWhereNameAndPromotionIsNull(name, quantity);
     }
+
 }

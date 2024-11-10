@@ -20,15 +20,15 @@ public enum StockPattern {
         this.pattern = pattern;
     }
 
-    public String formatStock(ProductName name, Price price , Long quantity, PromotionName promotion) {
+    public String formatStock(ProductName name, Price price, Long quantity, PromotionName promotion) {
         String formattedPrice = String.format(AMOUNT_UNIT.getPattern(), price.getPrice());
         String formattedQuantity = String.format(QUANTITY_PATTERN, quantity);
         String formattedPromotionName = NON_PROMOTION_NAME;
-        if(promotion != null) {
+        if (promotion != null) {
             formattedPromotionName = promotion.getPromotionName();
         }
         if (quantity == 0L) {
-            return String.format(pattern, name, formattedPrice,OUT_OF_STOCK_MESSAGE ,formattedPromotionName);
+            return String.format(pattern, name, formattedPrice, OUT_OF_STOCK_MESSAGE, formattedPromotionName);
         }
         return String.format(pattern, name, formattedPrice, formattedQuantity, formattedPromotionName);
     }

@@ -31,7 +31,7 @@ public class BillingItem {
     public Long calculateDeficitQuantity() {
         Long promotionStock = stock.getQuantity();
         Long promotionQuantity = promotion.calculatePromotionQuantity(checkPromotionGiftQuantity());
-        return promotion.calculateNonPromotionalQuantity(order,stock) - (promotionStock - promotionQuantity);
+        return promotion.calculateNonPromotionalQuantity(order, stock) - (promotionStock - promotionQuantity);
     }
 
     public Long calculatePurchaseAmount() {
@@ -39,7 +39,7 @@ public class BillingItem {
     }
 
     public Long calculatePromotionAmount() {
-        if(hasPromotion()) {
+        if (hasPromotion()) {
             Long promotionQuantity = promotion.calculatePromotionQuantity(checkPromotionGiftQuantity());
             return stock.calculateAmount(promotionQuantity);
         }

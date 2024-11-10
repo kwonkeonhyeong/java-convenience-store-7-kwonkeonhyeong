@@ -24,4 +24,5 @@ public class Answer {
             throw new IllegalArgumentException(INVALID_FORMAT.getMessage());
         }
     }
+
 }

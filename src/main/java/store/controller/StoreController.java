@@ -134,7 +134,8 @@ public class StoreController {
 
     private void displayOutOfStock(Stock normalStock, Stock promotionStock) {
         if (normalStock == null && promotionStock != null) {
-            String formatted = STOCK_FORMAT.formatStock(promotionStock.getProductName(), promotionStock.getPrice(), 0L, null);
+            String formatted = STOCK_FORMAT.formatStock(promotionStock.getProductName(), promotionStock.getPrice(), 0L,
+                    null);
             outputView.printCurrentStockState(formatted);
         }
     }
@@ -148,4 +149,5 @@ public class StoreController {
             }
         }
     }
+
 }

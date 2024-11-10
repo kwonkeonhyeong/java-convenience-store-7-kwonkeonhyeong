@@ -52,4 +52,5 @@ public class ProductName {
     public String toString() {
         return name;
     }
+
 }

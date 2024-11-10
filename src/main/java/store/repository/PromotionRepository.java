@@ -25,6 +25,13 @@ public class PromotionRepository {
         }
     }
 
+    public Promotion findByPromotionName(String name) {
+        return store.stream()
+                .filter(promotion -> promotion.matchesName(name))
+                .findFirst()
+                .orElse(null);
+    }
+
     private void registerData(List<String> inputs) {
         inputs.removeFirst();
         for (String input : inputs) {
@@ -33,10 +40,4 @@ public class PromotionRepository {
         }
     }
 
-    public Promotion findByPromotionName(String name) {
-        return store.stream()
-                .filter(promotion -> promotion.matchesName(name))
-                .findFirst()
-                .orElse(null);
-    };
 }

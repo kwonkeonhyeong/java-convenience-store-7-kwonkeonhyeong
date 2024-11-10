@@ -22,27 +22,28 @@ public class AppConfig {
         );
     }
 
-    public StockRepository createStockRepository() {
+    private StockRepository createStockRepository() {
         return new StockRepository();
     }
 
-    public PromotionRepository createPromotionRepository() {
+    private PromotionRepository createPromotionRepository() {
         return new PromotionRepository();
     }
 
-    public OrderService createOrderService(StockRepository stockRepository, PromotionRepository promotionRepository) {
+    private OrderService createOrderService(StockRepository stockRepository, PromotionRepository promotionRepository) {
         return new OrderService(stockRepository, promotionRepository);
     }
 
-    public BillingService createBillingService(StockRepository stockRepository, PromotionRepository promotionRepository) {
+    private BillingService createBillingService(StockRepository stockRepository,
+                                                PromotionRepository promotionRepository) {
         return new BillingService(stockRepository, promotionRepository);
     }
 
-    public InputView createInputView() {
+    private InputView createInputView() {
         return new InputView();
     }
 
-    public OutputView createOutputView() {
+    private OutputView createOutputView() {
         return new OutputView();
     }
 

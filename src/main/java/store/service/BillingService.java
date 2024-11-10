@@ -8,6 +8,7 @@ import store.repository.PromotionRepository;
 import store.repository.StockRepository;
 
 public class BillingService {
+
     private final StockRepository stockRepository;
     private final PromotionRepository promotionRepository;
 
@@ -19,11 +20,12 @@ public class BillingService {
     public BillingItem generateBillingItem(Order order) {
         String name = order.getName();
         Stock stock = stockRepository.findByProductNameAndPromotionIsNotNull(name);
-        if(stock != null) {
+        if (stock != null) {
             Promotion promotion = promotionRepository.findByPromotionName(stock.getPromotionName());
-            return BillingItem.of(order,stock,promotion);
+            return BillingItem.of(order, stock, promotion);
         }
         stock = stockRepository.findByProductNameAndPromotionIsNull(name);
-        return BillingItem.of(order,stock,null);
+        return BillingItem.of(order, stock, null);
     }
+
 }

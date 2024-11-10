@@ -43,4 +43,5 @@ public class InputView {
         System.out.println(ANOTHER_ORDER_MESSAGE);
         return readLine().strip();
     }
+
 }

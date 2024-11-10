@@ -4,6 +4,7 @@ public enum Delimiter {
 
     COMMA(","),
     DASH("-");
+
     private final String delimiter;
 
     Delimiter(String delimiter) {
