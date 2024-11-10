@@ -10,10 +10,7 @@ import java.util.stream.Collectors;
 import store.util.FileHandler;
 import store.domain.stock.Stock;
 import store.domain.vo.ProductName;
-/*
-* 재고와 관련된 데이터를 로드하고 이를 관리하는 책임 부여
-* 재고 데이터가 필요한 다른 객체에게 데이터를 제공하는 책임 부여
-* */
+
 public class StockRepository {
 
     private final List<Stock> store = new ArrayList<>();

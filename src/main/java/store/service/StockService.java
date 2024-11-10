@@ -7,11 +7,7 @@ import store.domain.billing.BillingItem;
 import store.domain.stock.Stock;
 import store.domain.vo.ProductName;
 import store.repository.StockRepository;
-/*
-* StockService에서 재고 관련 서비스를 모두 처리해주고 싶음
-* 먼저 재고 불러오고 해당 재고들을 사용자에게 보여주기 위한 포맷을 만드는 기능을 할당
-* 추가 적으로 재고를 업데이트 하는 기능도 이쪽으로 뺄 수 있을까?? -> 바로 적용 해봄 Nice
-* */
+
 public class StockService {
 
     private final StockRepository stockRepository;

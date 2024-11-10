@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import store.util.FileHandler;
 import store.domain.stock.Promotion;
-/*
-* 프로모션 데이터를 관리하고 필요한 객체에게 데이터를 제공하는 책임을 부여
-* */
+
 public class PromotionRepository {
 
     private final List<Promotion> store = new ArrayList<>();

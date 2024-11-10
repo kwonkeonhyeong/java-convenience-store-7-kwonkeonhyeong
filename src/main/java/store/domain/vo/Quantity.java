@@ -3,9 +3,7 @@ package store.domain.vo;
 import static store.util.constant.ErrorMessage.INVALID_FORMAT;
 
 import java.util.Objects;
-/*
-* Quantity는 변하지만 Quantity내 값을 직접적으로 변경할 수 는 없도록 하여 vo로 구현
-* */
+
 public class Quantity {
 
     private static final String INVALID_MIN_QUANTITY = "[ERROR] 수량은 0 이상이어야 합니다.";

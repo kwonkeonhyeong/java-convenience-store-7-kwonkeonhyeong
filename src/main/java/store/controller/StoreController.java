@@ -1,10 +1,7 @@
 package store.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 import store.domain.billing.Bill;
-import store.domain.billing.BillingItem;
 import store.domain.discount.DiscountPolicy;
 import store.domain.discount.MembershipDiscountPolicy;
 import store.domain.discount.NonDiscountPolicy;
@@ -17,10 +14,6 @@ import store.service.StockService;
 import store.view.InputView;
 import store.view.OutputView;
 
-/*
- * StoreController에서 편의점 관련 로직 흐름을 관리
- * 서비스 관련 로직을 최대한 제거하고 model과 view를 중개할 수 있게 최대한 신경써서 구현하였음.
- * */
 public class StoreController {
 
     private final OrderService orderService;

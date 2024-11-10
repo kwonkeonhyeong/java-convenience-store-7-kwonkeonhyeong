@@ -1,11 +1,7 @@
 package store.view;
 
 import static camp.nextstep.edu.missionutils.Console.readLine;
-/*
-* 사용자에게 값을 받아오고 이를 반환한다.
-* 여기서 기본적인 빈값 검증 등 input value에 대한 검증을 진행해야 할지 말지 고민이 많다.
-* inputview에서 한번 검증을 진행하고 model에서 한번 더 검증하면 더욱 안전한 프로그램이 될 것이긴 하다. -> 리펙토링 고려...
-* */
+
 public class InputView {
 
     private static final String ORDER_MESSAGE = "구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])";

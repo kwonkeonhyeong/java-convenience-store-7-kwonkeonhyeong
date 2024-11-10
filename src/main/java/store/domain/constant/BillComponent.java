@@ -1,7 +1,5 @@
 package store.domain.constant;
-/*
-* 영수증 view에 필요한 컴포넌트 관리
-* */
+
 public enum BillComponent {
 
     TOTAL_PROMOTION_DISCOUNT_AMOUNT_LABEL("행사할인"),

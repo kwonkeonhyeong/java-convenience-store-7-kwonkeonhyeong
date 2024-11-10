@@ -1,9 +1,7 @@
 package store.domain.vo;
 
 import java.util.Objects;
-/*
-* 가격은 변하지 않는 값이라고 생각하여  Vo 생성
-* */
+
 public class Price {
 
     private final Long price;

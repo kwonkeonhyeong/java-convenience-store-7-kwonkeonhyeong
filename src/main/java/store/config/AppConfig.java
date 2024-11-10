@@ -9,11 +9,6 @@ import store.service.StockService;
 import store.view.InputView;
 import store.view.OutputView;
 
-/*
-AppConfig 에서 객체 생성 기능 담당
-사용하는 Service, Repository, Controller, View 가 늘어나니 Controller에게 생성 책임을 몰아주는 것에는 한계가 있음
-이를 해결하기 위해서 AppConfig를 구현해 보았습니다.
-* */
 public class AppConfig {
 
     public StoreController createStoreController() {

@@ -1,7 +1,5 @@
 package store.domain.constant;
-/*
-* 상품 업로드 시 데이터 상품 인덱스 관리
-* */
+
 public enum ProductInputIndex {
 
     NAME_INDEX(0),

@@ -8,10 +8,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-/*
-* 사용자가 입력한 주문 목록 관리
-* 전체 주문에 대한 검증 책임 부여
-* */
+
 public class Orders {
 
     private final List<Order> orders;

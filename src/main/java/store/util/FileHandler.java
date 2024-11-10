@@ -7,9 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-/*
-* 파일 입출력을 관리하는 역할을 부여
-* */
+
 public class FileHandler {
 
     public static List<String> readFromFile(String filePath) throws IOException {
