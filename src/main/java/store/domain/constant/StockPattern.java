@@ -6,6 +6,9 @@ import store.domain.vo.Price;
 import store.domain.vo.ProductName;
 import store.domain.vo.PromotionName;
 
+/*
+* 재고 현황을 보여주기 위해서 각 재고 별 재고 현황 포맷 생성 역할 부여
+* */
 public enum StockPattern {
 
     STOCK_FORMAT("- %s %s원 %s %s\n");

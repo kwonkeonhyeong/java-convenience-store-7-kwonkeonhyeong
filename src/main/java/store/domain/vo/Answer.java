@@ -1,7 +1,9 @@
 package store.domain.vo;
 
 import static store.util.constant.ErrorMessage.INVALID_FORMAT;
-
+/*
+* 긍정,부정에 대한 대답은 변하지 않는 값이므로 vo로 구현
+* */
 public class Answer {
 
     private static final String ANSWER_YES = "Y";

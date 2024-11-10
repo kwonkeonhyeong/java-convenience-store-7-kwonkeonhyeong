@@ -3,7 +3,10 @@ package store.domain.constant;
 import static store.domain.constant.AmountPattern.AMOUNT_UNIT;
 import static store.domain.constant.AmountPattern.DISCOUNT_AMOUNT_UNIT;
 import static store.domain.constant.BillComponent.BLANK;
-
+/*
+* 영수증 아이템 출력 패턴을 관리
+* 영수증 출력 패턴에 맞게 영수증 항목을 만들어 주는 책임 부여
+* */
 public enum BillPattern {
 
     ITEM_FORMAT("%-10s %-5s %-10s\n");

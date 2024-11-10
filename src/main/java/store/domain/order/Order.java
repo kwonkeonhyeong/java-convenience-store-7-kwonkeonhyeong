@@ -6,7 +6,10 @@ import static store.util.constant.ErrorMessage.INVALID_FORMAT;
 import java.util.Objects;
 import store.domain.vo.ProductName;
 import store.domain.vo.Quantity;
-
+/*
+* 사용자가 입력한 주문을 관리하는 책임 부여
+* 주문과 관련된 검증 및 주문 수량 관리 책임 부여
+* */
 public class Order {
 
     private static final String OPEN_BRACKET = "[";

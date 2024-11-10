@@ -1,5 +1,7 @@
 package store.util.constant;
-
+/*
+* 파일 업로드 상수 관리
+* */
 public enum FilePath {
 
     PRODUCTS_FILE_PATH("src/main/resources/products.md"),

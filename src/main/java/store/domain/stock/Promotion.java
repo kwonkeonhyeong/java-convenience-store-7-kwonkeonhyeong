@@ -11,7 +11,10 @@ import static store.util.constant.Delimiter.COMMA;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import store.domain.order.Order;
-
+/*
+* 프로모션과 관련된 책임 부여
+* 프로모션과 관련된 수량 체크 및 프로모션 적용 가능 날짜 확인 책임 부여
+* */
 public class Promotion {
 
     private final long NON_PROMOTION_QUANTITY = 0L;

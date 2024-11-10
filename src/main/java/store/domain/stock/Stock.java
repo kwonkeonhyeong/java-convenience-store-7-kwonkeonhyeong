@@ -11,7 +11,10 @@ import store.domain.vo.Price;
 import store.domain.vo.ProductName;
 import store.domain.vo.PromotionName;
 import store.domain.vo.Quantity;
-
+/*
+* 재고와 관련된 책임 부여
+* 해당 재고와 관련된 메시지를 받고 응답해줌으로써 재고 상태를 다른 객체에게 알려준다.
+* */
 public class Stock {
     private final ProductName productName;
     private final Price price;

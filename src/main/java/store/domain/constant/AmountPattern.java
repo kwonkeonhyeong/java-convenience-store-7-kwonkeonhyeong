@@ -1,5 +1,7 @@
 package store.domain.constant;
-
+/*
+* 금액과 관련된 포맷 패턴을 관리
+* */
 public enum AmountPattern {
 
     AMOUNT_UNIT("%,d"),

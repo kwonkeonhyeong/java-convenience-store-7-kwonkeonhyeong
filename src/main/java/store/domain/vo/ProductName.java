@@ -3,7 +3,9 @@ package store.domain.vo;
 import static store.util.constant.ErrorMessage.INVALID_FORMAT;
 
 import java.util.Objects;
-
+/*
+* productName은 변하지 않는 값이므로 vo로 구현=
+* */
 public class ProductName {
 
     private final String name;

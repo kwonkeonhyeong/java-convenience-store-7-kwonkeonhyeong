@@ -5,7 +5,10 @@ import static store.domain.constant.BillPattern.ITEM_FORMAT;
 import store.domain.stock.Promotion;
 import store.domain.stock.Stock;
 import store.domain.order.Order;
-
+/*
+* 영수증 항목에 해당하는 책임을 부여
+* 각각의 영수증 항목에 해당하는 값을 가지기 위해서 객체 내에서 order, stock, promotion 과 소통하며 해당 값을 구해낸다.
+* */
 public class BillingItem {
 
     private static final Long NON_PROMOTION_QUANTITY = 0L;

@@ -1,5 +1,7 @@
 package store.domain.constant;
-
+/*
+* 프로모션 업로드 시 데이터 인덱스 관리
+* */
 public enum PromotionInputIndex {
 
     NAME_INDEX(0),
