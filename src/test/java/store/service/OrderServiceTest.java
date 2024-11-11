@@ -12,14 +12,12 @@ import store.repository.StockRepository;
 
 class OrderServiceTest {
 
-    private static StockRepository stockRepository;
-    private static PromotionRepository promotionRepository;
     private static OrderService orderService;
 
     @BeforeAll
     static void BeforeAll() {
-        stockRepository = new StockRepository();
-        promotionRepository = new PromotionRepository();
+        StockRepository stockRepository = new StockRepository();
+        PromotionRepository promotionRepository = new PromotionRepository();
         orderService = new OrderService(stockRepository, promotionRepository);
     }
 
