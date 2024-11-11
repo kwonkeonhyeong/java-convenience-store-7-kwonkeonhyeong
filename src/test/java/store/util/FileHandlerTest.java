@@ -1,10 +1,9 @@
-package store;
+package store.util;
 
 import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
-import store.util.FileHandler;
 
 class FileHandlerTest {
     @Test

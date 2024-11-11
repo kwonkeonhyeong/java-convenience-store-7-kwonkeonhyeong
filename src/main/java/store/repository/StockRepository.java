@@ -36,7 +36,7 @@ public class StockRepository {
         }
     }
 
-    public List<ProductName> findDistinctProductNames() {
+    public List<ProductName> findUniqueProductNames() {
         return store.stream()
                 .map(Stock::getProductName)
                 .collect(Collectors.toCollection(LinkedHashSet::new))

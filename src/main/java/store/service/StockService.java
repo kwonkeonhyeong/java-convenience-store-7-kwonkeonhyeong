@@ -18,7 +18,7 @@ public class StockService {
 
     public String formatCurrentStockState() {
         StringBuilder stringBuilder = new StringBuilder();
-        List<ProductName> uniqueProductNames = stockRepository.findDistinctProductNames();
+        List<ProductName> uniqueProductNames = stockRepository.findUniqueProductNames();
         for (ProductName name : uniqueProductNames) {
             Stock promotionStock = stockRepository.findByProductNameAndPromotionIsNotNull(name.getName());
             Stock normalStock = stockRepository.findByProductNameAndPromotionIsNull(name.getName());
