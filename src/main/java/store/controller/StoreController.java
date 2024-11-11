@@ -92,7 +92,7 @@ public class StoreController {
     private void checkNonPromotionalQuantity(Order order, Long quantity) {
         Answer answer = doLoop(() -> determineNonPromotionPurchase(order, quantity));
         if (!answer.isYes()) {
-            order.removeQuantity(quantity);
+            order.decreaseQuantity(quantity);
         }
     }
 

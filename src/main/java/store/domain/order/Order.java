@@ -45,7 +45,7 @@ public class Order {
         quantity = quantity.add();
     }
 
-    public void removeQuantity(Long quantity) {
+    public void decreaseQuantity(Long quantity) {
         this.quantity = this.quantity.decrease(quantity);
     }
 

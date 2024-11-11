@@ -47,12 +47,14 @@ class StockTest {
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("[ERROR] 수량은 0 이상이어야 합니다.");
         }
+
         @Test
         void 상품_수량이_빈_값인_경우_예외발생() {
             assertThatThrownBy(() -> Stock.from("콜라,1000,,탄산2+1"))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
         }
+
         @Test
         void 상품_수량이_숫자가_아닌_경우_예외발생() {
             assertThatThrownBy(() -> Stock.from("콜라,1000,하나,탄산2+1"))
@@ -72,6 +74,7 @@ class StockTest {
             Stock stock = Stock.from("콜라,1000,10,null");
             assertThat(stock.isApplyPromotion()).isFalse();
         }
+
     }
 
     @Nested
