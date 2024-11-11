@@ -1,8 +1,8 @@
 package store.domain.discount;
 
-public class NonDiscountPolicy implements DiscountPolicy {
+import static store.domain.constant.Discount.NON_DISCOUNT;
 
-    private static final Long NON_DISCOUNT_AMOUNT = 0L;
+public class NonDiscountPolicy implements DiscountPolicy {
 
     private NonDiscountPolicy() {}
 
@@ -12,6 +12,6 @@ public class NonDiscountPolicy implements DiscountPolicy {
 
     @Override
     public Long getDiscountAmount(Long totalAmount) {
-        return NON_DISCOUNT_AMOUNT;
+        return NON_DISCOUNT.getDiscountAmount(totalAmount);
     }
 }

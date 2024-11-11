@@ -1,9 +1,8 @@
 package store.domain.discount;
 
-public class MembershipDiscountPolicy implements DiscountPolicy{
+import static store.domain.constant.Discount.MEMBERSHIP_DISCOUNT;
 
-    private static final Long MEMBERSHIP_MAX_AMOUNT = 8000L;
-    private static final double MEMBERSHIP_DISCOUNT_RATE = 0.3;
+public class MembershipDiscountPolicy implements DiscountPolicy{
 
     private MembershipDiscountPolicy() {}
 
@@ -13,10 +12,6 @@ public class MembershipDiscountPolicy implements DiscountPolicy{
 
     @Override
     public Long getDiscountAmount(Long totalAmount) {
-        long discountAmount = (long) ((totalAmount) * (MEMBERSHIP_DISCOUNT_RATE));
-        if (discountAmount > MEMBERSHIP_MAX_AMOUNT) {
-            discountAmount = MEMBERSHIP_MAX_AMOUNT;
-        }
-        return discountAmount;
+        return MEMBERSHIP_DISCOUNT.getDiscountAmount(totalAmount);
     }
 }
