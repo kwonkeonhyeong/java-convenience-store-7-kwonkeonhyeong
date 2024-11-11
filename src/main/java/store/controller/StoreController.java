@@ -33,16 +33,16 @@ public class StoreController {
 
     public void run() {
         do {
-            displayCurrentStockState();
+            provideCurrentStockState();
             Bill bill = completeOrder();
             displayBill(bill);
             updateStock(bill);
         } while (doLoop(this::determineAnotherOrder));
     }
 
-    private void displayCurrentStockState() {
-        outputView.printStocksStateHeader();
-        outputView.printCurrentStockState(stockService.formatCurrentStockState());
+    private void provideCurrentStockState() {
+            outputView.printStocksStateHeader();
+            outputView.printCurrentStockState(stockService.formatCurrentStockState());
     }
 
     private Bill completeOrder() {

@@ -20,8 +20,8 @@ public class PromotionRepository {
         try {
             List<String> inputs = FileHandler.readFromFile(PROMOTIONS_FILE_PATH.getPath());
             registerData(inputs);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        } catch (IOException | IllegalArgumentException e) {
+            e.printStackTrace();
         }
     }
 

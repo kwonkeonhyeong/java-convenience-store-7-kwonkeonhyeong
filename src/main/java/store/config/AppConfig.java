@@ -24,7 +24,7 @@ public class AppConfig {
     }
 
     private StockRepository createStockRepository() {
-        return new StockRepository();
+            return new StockRepository();
     }
 
     private PromotionRepository createPromotionRepository() {

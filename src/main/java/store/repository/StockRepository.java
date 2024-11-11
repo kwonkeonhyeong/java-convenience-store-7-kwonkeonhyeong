@@ -23,8 +23,8 @@ public class StockRepository {
         try {
             List<String> inputs = FileHandler.readFromFile(PRODUCTS_FILE_PATH.getPath());
             registerData(inputs);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        } catch (IOException | IllegalArgumentException e) {
+            e.printStackTrace();
         }
     }
 
