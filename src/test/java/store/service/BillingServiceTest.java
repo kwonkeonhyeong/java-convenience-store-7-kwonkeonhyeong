@@ -14,6 +14,7 @@ import store.repository.PromotionRepository;
 import store.repository.StockRepository;
 
 class BillingServiceTest {
+
     private static BillingService billingService;
     private static OrderService orderService;
 
