@@ -27,6 +27,16 @@ public class StockService {
         return stringBuilder.toString();
     }
 
+    public void updateStock(List<BillingItem> billingItems) {
+        for (BillingItem billingItem : billingItems) {
+            if (billingItem.hasPromotion()) {
+                updatePromotionStock(billingItem);
+                continue;
+            }
+            updateNormalStock(billingItem);
+        }
+    }
+
     private String formatStockInfo(Stock promotionStock, Stock normalStock) {
         StringBuilder stringBuilder = new StringBuilder();
         formatStock(stringBuilder,promotionStock);
@@ -46,16 +56,6 @@ public class StockService {
             String formatted = STOCK_FORMAT.formatStock(promotionStock.getProductName(), promotionStock.getPrice(), 0L,
                     null);
             stringBuilder.append(formatted);
-        }
-    }
-
-    public void updateStock(List<BillingItem> billingItems) {
-        for (BillingItem billingItem : billingItems) {
-            if (billingItem.hasPromotion()) {
-                updatePromotionStock(billingItem);
-                continue;
-            }
-            updateNormalStock(billingItem);
         }
     }
 
